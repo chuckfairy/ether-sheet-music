@@ -62,6 +62,8 @@ contract SheetMusic {
 
     uint constant MINIMUM_DONATION = 0.01 ether;
 
+    mapping( address => string ) private composers;
+
 
     /**
      * Events
@@ -111,7 +113,7 @@ contract SheetMusic {
 
 
     /**
-     * Random donation to contract
+     * Random value add to contract
      */
 
     function () external payable {
@@ -119,6 +121,11 @@ contract SheetMusic {
         checkGoal( msg.sender );
 
     }
+
+
+    /**
+     * Donate with intent
+     */
 
     function donate() external payable {
 
@@ -140,6 +147,26 @@ contract SheetMusic {
             DonationGoalReached( maker );
 
         }
+
+    }
+
+
+    /**
+     * Getters
+     */
+
+    function getNumberOfNotes() external view returns ( uint ) {
+
+        return numNotes;
+
+    }
+
+    function getNote( uint id ) external view returns (
+        address,
+        uint8,
+        NoteLength,
+        uint
+    ) {
 
     }
 
