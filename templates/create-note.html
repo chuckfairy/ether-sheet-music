@@ -1,0 +1,73 @@
+<h2>Create A Note</h2>
+
+<form id="create-game-form">
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <p>Donation (ether MIN 0.05)</p>
+        </div>
+
+        <div class="col-sm-9">
+            <input type="number" step="0.000001" id="game-bet" placeholder="Donation" class="form-control" required>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <p>Note</p>
+        </div>
+
+        <div class="col-sm-9">
+
+            <select name="note" class="form-control">
+
+                <option value="">Pick a Note!</option>
+
+                {% for note, data in Midi.NoteNumber %}
+
+                <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-3">
+            <p>Note Length</p>
+        </div>
+
+        <div class="col-sm-9">
+
+            <select name="note-length" class="form-control">
+
+                <option value="">Pick a Length!</option>
+
+                {% for length, name in Midi.NoteLength %}
+
+                <option value="{{ length }}">{{ name }}</option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+            <button type="submit" class="btn btn-success btn-block">Create Note</button>
+        </div>
+
+    </div>
+
+</form>

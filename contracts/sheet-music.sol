@@ -62,6 +62,8 @@ contract SheetMusic {
 
     uint constant MINIMUM_DONATION = 0.01 ether;
 
+    bool private donationMet = false;
+
     mapping( address => string ) private composers;
 
 
@@ -142,7 +144,9 @@ contract SheetMusic {
 
     function checkGoal( address maker ) internal {
 
-        if( this.balance >= DONATION_GOAL ) {
+        if( this.balance >= DONATION_GOAL && ! donationMet ) {
+
+            donationMet = true;
 
             DonationGoalReached( maker );
 

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+
+        <meta charset="UTF-8">
+
+        <title>Ether Sheet Music</title>
+
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link href="./css/main.css" rel="stylesheet">
+        <link href="./js/lib/vextab.css" rel="stylesheet">
+
+    </head>
+
+    <body class="container">
+
+        <div id="message-area" class="alert alert-info"></div>
+
+        <h1>100 Ether Sheet Music Project</h1>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+            <li class="nav-item">
+                <a class="nav-link active" id="games-waiting-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="games-completed-tab" data-toggle="tab" href="#music-stats" role="tab">Stats</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab">About</a>
+            </li>
+
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+
+            <div class="tab-pane fade show active" id="music-main" role="tabpanel">
+
+                <h2>See the Piece</h2>
+
+                <div class="vex-tabdiv"
+                     width=680 scale=1.0 editor="true"
+                     editor_width=680 editor_height=330>options space=20
+tabstave
+notation=true
+key=C time=4/4
+
+notes :q =|: (5/2.5/3.7/4) :8 7-5h6/3 ^3^ 5h6-7/5 ^3^ :q 7V/4 |
+notes :8 t12p7/4 s5s3/4 :8 3s:16:5-7/5 :h p5/4
+text :w, |#segno, ,|, :hd, , #tr
+
+
+options space=25
+                </div>
+
+                {% include "create-note.html" %}
+
+            </div>
+
+            <div class="tab-pane fade" id="music-stats" role="tabpanel">
+                <h2>Composers</h2>
+            </div>
+
+            <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="contact-tab">
+                <h2>About</h2>
+
+                <a href="http://github.com/chuckfairy/etherchess">http://github.com/chuckfairy/etherchess</a>
+            </div>
+
+        </div>
+
+        <script
+               src="https://code.jquery.com/jquery-3.3.1.min.js"
+               integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+               crossorigin="anonymous"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script src="./js/lib/nunjucks.min.js"></script>
+        <script src="./js/lib/async.min.js"></script>
+        <script src="./js/lib/vextab-div.js"></script>
+
+        <script src="./js/util/Utils.js"></script>
+        <script src="./js/util/EventDispatcher.js"></script>
+        <script src="./js/util/Templater.js"></script>
+
+        <script>
+
+//Contract data
+
+var abi = {{ abi | safe }};
+var contract = web3.eth.contract( abi );
+
+
+//Instance
+
+var instance = contract.at( "{{ contract.address }}" );
+
+        </script>
+
+        <script src="./js/Namespace.js"></script>
+        <script src="./js/UI.js"></script>
+        <script src="./js/Main.js"></script>
+
+    </body>
+
+</html>
