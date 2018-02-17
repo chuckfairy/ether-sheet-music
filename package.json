@@ -1,0 +1,17 @@
+{
+    "name": "ether-sheet-music",
+    "version": "0.1.0",
+    "description": "Ether Sheet Music",
+    "main": "./src/App.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "chuckfairy",
+    "license": "MIT",
+    "dependencies": {
+        "web3": "*",
+        "node-static": "*",
+        "solc": "*",
+        "nunjucks": "*"
+    }
+}
