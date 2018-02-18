@@ -7,17 +7,19 @@
 
 //init
 
-EC.App = {
-    Game: null,
+EM.App = {
+    Music: null,
     UI: null
 };
 
 function init() {
 
-    // UI setup
+    EM.App.Music = new EM.Music;
 
-    EC.App.Game = new EC.Game();
-    EC.App.UI = new EC.UI( EC.App.Game );
+    EM.App.UI = new EM.UI( EM.App.Music );
+
+
+    // UI setup
 
     setupCreateForm();
 
@@ -31,11 +33,11 @@ function setupCreateForm() {
 
     //Create form
 
-    var createForm = document.getElementById( "create-game-form" );
+    var createForm = document.getElementById( "create-note-form" );
 
-    var gameBet = document.getElementById( "game-bet" );
-    var gameWaitTime  = document.getElementById( "game-wait-time" );
-    var gameTimePerRound = document.getElementById( "game-time-per-round" );
+    var donation = document.getElementById( "donation" );
+    var noteNumber = document.getElementById( "note" );
+    var noteLength = document.getElementById( "note-length" );
 
 
     //Main submit
@@ -44,7 +46,7 @@ function setupCreateForm() {
 
         e.preventDefault();
 
-        EC.App.Game.createGame( gameBet.value );
+        EM.App.Music.createNote( donation.value, donation.value, noteNumber.value, noteLength.value );
 
     }
 

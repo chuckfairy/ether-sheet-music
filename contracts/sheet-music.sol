@@ -174,4 +174,23 @@ contract SheetMusic {
 
     }
 
+
+    /**
+     * Stats getter
+     */
+
+    function getDonationStats() external view returns (
+        uint goal,
+        uint minimum,
+        uint currentValue
+    ) {
+
+        return (
+            DONATION_GOAL,
+            MINIMUM_DONATION,
+            this.balance
+        );
+
+    }
+
 }

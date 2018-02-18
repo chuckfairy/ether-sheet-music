@@ -51,8 +51,6 @@ key=C time=4/4
 
 notes :q =|: (5/2.5/3.7/4) :8 7-5h6/3 ^3^ 5h6-7/5 ^3^ :q 7V/4 |
 notes :8 t12p7/4 s5s3/4 :8 3s:16:5-7/5 :h p5/4
-text :w, |#segno, ,|, :hd, , #tr
-
 
 options space=25
                 </div>
@@ -62,13 +60,21 @@ options space=25
             </div>
 
             <div class="tab-pane fade" id="music-stats" role="tabpanel">
+
+                <h2>Global Stats</h2>
+
+                <div id="global-stats"></div>
+
                 <h2>Composers</h2>
+
             </div>
 
             <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="contact-tab">
+
                 <h2>About</h2>
 
                 <a href="http://github.com/chuckfairy/etherchess">http://github.com/chuckfairy/etherchess</a>
+
             </div>
 
         </div>
@@ -86,6 +92,7 @@ options space=25
 
         <script src="./js/util/Utils.js"></script>
         <script src="./js/util/EventDispatcher.js"></script>
+        <script src="./js/util/AJAX.js"></script>
         <script src="./js/util/Templater.js"></script>
 
         <script>
@@ -103,6 +110,7 @@ var instance = contract.at( "{{ contract.address }}" );
         </script>
 
         <script src="./js/Namespace.js"></script>
+        <script src="./js/Music.js"></script>
         <script src="./js/UI.js"></script>
         <script src="./js/Main.js"></script>
 

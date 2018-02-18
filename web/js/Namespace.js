@@ -3,4 +3,4 @@
  */
 "use strict";
 
-var EC = {};
+var EM = {};
