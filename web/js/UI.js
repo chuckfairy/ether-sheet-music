@@ -28,11 +28,18 @@ EM.UI.prototype = {
 
     templates: [
         "composer-note.html",
-        "global-stats.html"
+        "global-stats.html",
+        "vextab-piece.html"
     ],
 
+    pieceDom: null,
+    pieceId: "music-piece",
+
     statsDom: null,
-    statsId: "music-stats",
+    statsId: "global-stats",
+
+    composersDom: null,
+    composersId: "composer-stats",
 
     messagesDom: null,
     messagesId: "message-area",
@@ -47,7 +54,9 @@ EM.UI.prototype = {
 
         var scope = this;
 
-        scope.waitingDom = document.getElementById( scope.waitingId );
+        scope.pieceDom = document.getElementById( scope.pieceId );
+        scope.statsDom = document.getElementById( scope.statsId );
+        scope.composersDom = document.getElementById( scope.composersId );
         scope.messagesDom = document.getElementById( scope.messagesId );
 
         scope.templater = new Templater({
@@ -57,6 +66,7 @@ EM.UI.prototype = {
         scope.templater.compile( function() {
 
             scope.setupStats();
+            scope.setupComposerStats();
 
         });
 
@@ -80,7 +90,7 @@ EM.UI.prototype = {
 
 
     /**
-     * Stats setup
+     * Stats global setup
      */
 
     setupStats: function() {
@@ -88,8 +98,6 @@ EM.UI.prototype = {
         var scope = this;
 
         scope.Music.getStats( function( stats ) {
-
-            console.log( stats );
 
             var vars = {
                 stats: {
@@ -101,8 +109,7 @@ EM.UI.prototype = {
 
             scope.templater.render( "global-stats.html", vars, function( template ) {
 
-                var div = document.getElementById( "global-stats" );
-                div.innerHTML = template;
+                scope.statsDom.innerHTML = template;
 
             });
 
@@ -110,6 +117,105 @@ EM.UI.prototype = {
 
     },
 
+
+    /**
+     * Setup composer stats
+     */
+
+    setupComposerStats: function() {
+
+        var scope = this;
+
+        scope.Music.getComposerStats( function( composers ) {
+
+            scope.renderPiece( composers );
+
+            scope.composersDom.innerHTML = "";
+
+            scope.renderComposerNotes( composers );
+
+        });
+
+    },
+
+
+    /**
+     * Render the piece
+     */
+
+    renderPiece: function( notes ) {
+
+        var scope = this;
+
+        var vars = {
+            notes: notes
+        };
+
+        scope.templater.render( "abc-piece.html", vars, function( template ) {
+
+            console.log( template );
+
+            ABCJS.renderAbc( scope.pieceId, template );
+
+        });
+
+    },
+
+
+    /**
+     * Individual composer notes
+     */
+
+    renderComposerNotes: function( composers ) {
+
+        var scope = this;
+
+        var vars = {
+            composers: composers
+        };
+
+        scope.templater.render( "composer-note.html", vars, function( template ) {
+
+            scope.composersDom.insertAdjacentHTML(
+                "beforeend",
+                template
+            );
+
+            scope.setupComposerVexTab();
+
+        });
+
+    },
+
+
+    /**
+     * Set vextab sheet music
+     */
+
+    setupComposerVexTab: function() {
+
+        var scope = this;
+
+        var notes = scope.composersDom.getElementsByClassName(
+            "vex-composer-note"
+        );
+        var nl = notes.length;
+
+        var opts = {};
+
+        var width = 150;
+        var height = 300;
+
+        for( var i = 0; i < nl; ++ i ) {
+
+            var note = notes[ i ];
+            note.setAttribute( "width", width );
+
+            var tab = new VexTabDiv.Div( note, opts );
+
+        }
+
+    },
 
 
     /**

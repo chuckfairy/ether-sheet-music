@@ -23,7 +23,11 @@
         <ul class="nav nav-tabs" id="myTab" role="tablist">
 
             <li class="nav-item">
-                <a class="nav-link active" id="games-waiting-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
+                <a class="nav-link active" id="music-view-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="music-create-tab" data-toggle="tab" href="#music-create" role="tab">Create a Note</a>
             </li>
 
             <li class="nav-item">
@@ -42,18 +46,13 @@
 
                 <h2>See the Piece</h2>
 
-                <div class="vex-tabdiv"
-                     width=680 scale=1.0 editor="true"
-                     editor_width=680 editor_height=330>options space=20
-tabstave
-notation=true
-key=C time=4/4
-
-notes :q =|: (5/2.5/3.7/4) :8 7-5h6/3 ^3^ 5h6-7/5 ^3^ :q 7V/4 |
-notes :8 t12p7/4 s5s3/4 :8 3s:16:5-7/5 :h p5/4
-
-options space=25
+                <div id="music-piece">
+                    <img class="loader-img" src="./assets/loader.gif">
                 </div>
+
+            </div>
+
+            <div class="tab-pane fade" id="music-create" role="tabpanel">
 
                 {% include "create-note.html" %}
 
@@ -63,9 +62,15 @@ options space=25
 
                 <h2>Global Stats</h2>
 
-                <div id="global-stats"></div>
+                <div id="global-stats">
+                    <img class="loader-img" src="./assets/loader.gif">
+                </div>
 
                 <h2>Composers</h2>
+
+                <div id="composer-stats" class="container-fluid">
+                    <img class="loader-img" src="./assets/loader.gif">
+                </div>
 
             </div>
 
@@ -73,7 +78,7 @@ options space=25
 
                 <h2>About</h2>
 
-                <a href="http://github.com/chuckfairy/etherchess">http://github.com/chuckfairy/etherchess</a>
+                <a href="http://github.com/chuckfairy/ether-sheet-music">http://github.com/chuckfairy/ether-sheet-music</a>
 
             </div>
 
@@ -89,6 +94,7 @@ options space=25
         <script src="./js/lib/nunjucks.min.js"></script>
         <script src="./js/lib/async.min.js"></script>
         <script src="./js/lib/vextab-div.js"></script>
+        <script src="./js/lib/abcjs_basic_3.3.2-min.js"></script>
 
         <script src="./js/util/Utils.js"></script>
         <script src="./js/util/EventDispatcher.js"></script>
@@ -106,6 +112,11 @@ var contract = web3.eth.contract( abi );
 //Instance
 
 var instance = contract.at( "{{ contract.address }}" );
+
+
+//Midi data dump from node
+
+var Midi = {{ Midi | dump | safe }};
 
         </script>
 

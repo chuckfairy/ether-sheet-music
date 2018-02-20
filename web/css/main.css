@@ -2,13 +2,6 @@ body {
     padding-bottom: 20px;
 }
 
-/**
- * VexTab
- */
-.editor {
-    color: #000;
-}
-
 
 /**
  * UI
@@ -22,4 +15,21 @@ body {
     width: 400px;
     max-width: 90%;
     display: none; /** Start Hidden **/
+}
+
+.loader-img {
+    display: block;
+    margin: 0 auto;
+}
+
+.tab-content {
+    padding-top: 10px;
+}
+
+
+/**
+ * VexTab
+ */
+.editor {
+    color: #000;
 }

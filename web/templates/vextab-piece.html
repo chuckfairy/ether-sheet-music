@@ -1,0 +1,10 @@
+<div class="vex-tabdiv">
+tabstave
+notation=true
+tablature=false
+
+{% for note in notes %}
+notes :{{ note.vexTab.length }} {{ note.vexTab.midi }}
+{% endfor %}
+
+</div>

@@ -165,12 +165,21 @@ contract SheetMusic {
 
     }
 
-    function getNote( uint id ) external view returns (
+    function getNote( uint id ) public view returns (
         address,
         uint8,
         NoteLength,
         uint
     ) {
+
+        Note storage note = notes[ id ];
+
+        return (
+            note.maker,
+            note.midiNote,
+            note.length,
+            note.donation
+        );
 
     }
 

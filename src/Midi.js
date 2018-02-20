@@ -418,4 +418,46 @@ Midi.NoteLength = {
     8: "SIXTEENTH_NOTE"
 };
 
+
+/**
+ * Conversion to VexTab
+ */
+
+Midi.VexTab = {
+
+    NoteLength: {
+        0: "1",
+        1: "1",
+        2: "2",
+        3: "2",
+        4: "4",
+        5: "4",
+        6: "8",
+        7: "8",
+        8: "16",
+    }
+
+};
+
+
+/**
+ * ABC notation conversion
+ */
+
+Midi.ABC = {
+
+    NoteLength: {
+        0: "8",
+        1: "5",
+        2: "4",
+        3: "3",
+        4: "2",
+        5: ">",
+        6: "1",
+        7: "/",
+        8: "/",
+    }
+
+};
+
 module.exports = Midi;
