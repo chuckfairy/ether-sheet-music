@@ -1,3 +1,2 @@
-T: Ether Music Project
 L: 1/8{% for noteBatch in notes | batch( 16 ) %}
 :{% for note in noteBatch %}{{ note.abc.note | safe }}{{ note.abc.length | safe }} {% endfor %}{% endfor %}

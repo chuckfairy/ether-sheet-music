@@ -142,7 +142,7 @@ EM.Music = function() {
         if( lowerCase ) {
 
             abc = abc.toLowerCase();
-            appendage = "'".repeat( midiNumber - 4 );
+            appendage = "'".repeat( midiNumber - 5 );
 
         } else {
 
@@ -157,8 +157,6 @@ EM.Music = function() {
             abc = "^" + abc;
 
         }
-
-        console.log( abc );
 
         return abc;
 

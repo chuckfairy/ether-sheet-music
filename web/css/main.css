@@ -1,5 +1,6 @@
 body {
     padding-bottom: 20px;
+    overflow-x: hidden;
 }
 
 
@@ -24,6 +25,25 @@ body {
 
 .tab-content {
     padding-top: 10px;
+}
+
+/**
+ * Create note tab
+ */
+
+#create-note-form > .row {
+    margin-bottom: 10px;
+}
+
+
+/**
+ * Composer note / stats
+ */
+
+.composer-note {
+    border: 1px solid #AAA;
+    padding-top: 10px;
+    margin-bottom: 10px;
 }
 
 

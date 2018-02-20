@@ -1,26 +1,31 @@
 {% for composer in composers %}
 
-<div class="row">
+<div class="row composer-note">
 
-    <div class="col-sm-5">
-        <p><b>{{ composer.maker }}</b></p>
+    <div class="col-md-6">
+
+        <p style="font-size: 12px"><b>{{ composer.maker }}</b></p>
+
+        <p>Note #({{ composer.id }})</b></p>
+
         <a href="https://etherscan.io/address/{{ composer.maker }}" target="_blank">View on EtherScan</a>
+
     </div>
 
-    <div class="col-sm-2">
+    <div class="col-md-2">
         <p>{{ composer.midiData.midi }} #({{ composer.midi }})</p>
     </div>
 
-    <div class="col-sm-2">
+    <div class="col-md-2">
         <p>{{ composer.lengthName }}</p>
     </div>
 
-    <div class="col-sm-2">
-        <div class="vex-tabdiv vex-composer-note">
-tabstave
-notation=true
-tablature=false
-notes :{{ composer.vexTab.length }} {{ composer.vexTab.midi }}
+    <div class="col-md-1">
+        <div class="abc-composer-note"
+             data-note="L: 1/8
+:{{ composer.abc.note | safe }}{{ composer.abc.length | safe }}
+"
+            >
         </div>
     </div>
 

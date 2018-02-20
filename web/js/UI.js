@@ -34,6 +34,8 @@ EM.UI.prototype = {
 
     pieceDom: null,
     pieceId: "music-piece",
+    pieceMidiPlayId: "music-piece-midi",
+    pieceMidiDownloadId: "music-piece-midi-download",
 
     statsDom: null,
     statsId: "global-stats",
@@ -58,6 +60,8 @@ EM.UI.prototype = {
         scope.statsDom = document.getElementById( scope.statsId );
         scope.composersDom = document.getElementById( scope.composersId );
         scope.messagesDom = document.getElementById( scope.messagesId );
+
+        setTimeout( scope.setupAddressHeader, 250 );
 
         scope.templater = new Templater({
             templates: scope.templates
@@ -85,6 +89,18 @@ EM.UI.prototype = {
             scope.setMessage( "You created a note!" );
 
         });
+
+    },
+
+
+    /**
+     * Address header
+     */
+
+    setupAddressHeader: function() {
+
+        var header = document.getElementById( "address-section" );
+        header.innerHTML = web3.eth.defaultAccount;
 
     },
 
@@ -153,9 +169,27 @@ EM.UI.prototype = {
 
         scope.templater.render( "abc-piece.html", vars, function( template ) {
 
-            console.log( template );
+            //Render piece
 
-            ABCJS.renderAbc( scope.pieceId, template );
+            var pieceOpts = { responsive: "resize" };
+
+            ABCJS.renderAbc( scope.pieceId, template, pieceOpts, pieceOpts, pieceOpts );
+
+
+            //Midi setup
+
+            var downloadOpts = {
+                generateDownload: true,
+                generateInline: false
+            };
+
+			ABCJS.renderMidi( scope.pieceMidiPlayId, template );
+			ABCJS.renderMidi(
+                scope.pieceMidiDownloadId,
+                template,
+                {},
+                downloadOpts
+            );
 
         });
 
@@ -197,8 +231,9 @@ EM.UI.prototype = {
         var scope = this;
 
         var notes = scope.composersDom.getElementsByClassName(
-            "vex-composer-note"
+            "abc-composer-note"
         );
+        notes = Array.prototype.slice.call( notes );
         var nl = notes.length;
 
         var opts = {};
@@ -209,9 +244,12 @@ EM.UI.prototype = {
         for( var i = 0; i < nl; ++ i ) {
 
             var note = notes[ i ];
-            note.setAttribute( "width", width );
 
-            var tab = new VexTabDiv.Div( note, opts );
+            var abc = note.getAttribute( "data-note" );
+
+            ABCJS.renderAbc( note, abc );
+
+            note.className = "";
 
         }
 
