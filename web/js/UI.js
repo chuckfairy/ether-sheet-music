@@ -47,6 +47,8 @@ EM.UI.prototype = {
     messagesId: "message-area",
     messageTime: 5000,
 
+    newNoteCreated: false,
+
 
     /**
      * Main
@@ -78,6 +80,8 @@ EM.UI.prototype = {
         //Game created event display
 
         scope.Music.on( "note-created", function( result ) {
+
+            scope.setupNewNote( result.data.id );
 
         });
 
@@ -129,6 +133,13 @@ EM.UI.prototype = {
 
             });
 
+            var percentRaised = Math.floor( ( vars.stats.current / vars.stats.goal ) * 100 );
+            var donationRaisedDiv = document.getElementById( "donation-top-raised" );
+            donationRaisedDiv.innerHTML = percentRaised + "% Raised";
+
+            var fillBar = document.getElementById( "donation-bar-fill" );
+            fillBar.style.width = percentRaised + "%";
+
         });
 
     },
@@ -149,6 +160,37 @@ EM.UI.prototype = {
             scope.composersDom.innerHTML = "";
 
             scope.renderComposerNotes( composers );
+
+
+            //Setup listeners after everything loaded
+
+            scope.Music.setupListeners();
+
+        });
+
+    },
+
+    setupNewNote: function( id ) {
+
+        var scope = this;
+
+        scope.setMessage( "A new note as been created #" + id + "!" );
+
+        if( ! scope.newNoteCreated ) {
+
+            var alertDiv = document.getElementById( "music-changed-alert" );
+            alertDiv.style.display = "block"
+            scope.newNoteCreated = true;
+
+        }
+
+        scope.Music.getNote( id, function( note ) {
+
+            scope.renderComposerNotes( [ note ] );
+
+            scope.renderPiece(
+                Object.values( scope.Music.notesLoaded )
+            );
 
         });
 

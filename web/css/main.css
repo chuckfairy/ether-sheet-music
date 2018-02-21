@@ -5,6 +5,38 @@ body {
 
 
 /**
+ * Donation top
+ */
+
+#donation-top p {
+    margin: 0;
+}
+
+#donation-bar {
+    border: 1px solid #AAA;
+    height: 25px;
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 5px;
+}
+
+#donation-bar-fill {
+    background: #49FA26;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+#donation-top-raised {
+    position: absolute;
+    left: 2px;
+    z-index: 10;
+}
+
+
+/**
  * UI
  */
 
@@ -35,6 +67,10 @@ body {
     margin-bottom: 10px;
 }
 
+#music-changed-alert {
+    display: none;
+}
+
 
 /**
  * Composer note / stats
@@ -44,6 +80,10 @@ body {
     border: 1px solid #AAA;
     padding-top: 10px;
     margin-bottom: 10px;
+}
+
+.composer-data p {
+    margin: 0;
 }
 
 

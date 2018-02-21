@@ -2,11 +2,13 @@
 
 <div class="row composer-note">
 
-    <div class="col-md-6">
+    <div class="col-md-6 composer-data">
 
         <p style="font-size: 12px"><b>{{ composer.maker }}</b></p>
 
-        <p>Note #({{ composer.id }})</b></p>
+        <p>Note <b>#({{ composer.id }})</b></p>
+
+        <p>Donation <b>{{ composer.donation }}</b></p>
 
         <a href="https://etherscan.io/address/{{ composer.maker }}" target="_blank">View on EtherScan</a>
 

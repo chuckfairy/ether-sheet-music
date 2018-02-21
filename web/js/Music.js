@@ -7,6 +7,12 @@ EM.Music = function() {
 
     var scope = this;
 
+    scope.blockSearch = {
+        fromBlock: "latest"
+    };
+
+    scope.notesLoaded = {};
+
 
     /**
      * Main note creator
@@ -84,7 +90,18 @@ EM.Music = function() {
 
     };
 
+
+    /**
+     * Main get note
+     */
+
     scope.getNote = function( noteId, callback ) {
+
+        if( scope.notesLoaded[ noteId ] ) {
+
+            callback( scope.notesLoaded[ noteId ] );
+
+        }
 
         instance.getNote( noteId, function( err, note ) {
 
@@ -99,7 +116,7 @@ EM.Music = function() {
 
             var lengthVex = Midi.VexTab.NoteLength[ length ];
 
-            callback({
+            var noteData = {
                 id: noteId,
                 maker: note[ 0 ],
                 midi: midi,
@@ -115,11 +132,56 @@ EM.Music = function() {
                 length: length,
                 lengthName: Midi.NoteLength[ length ],
                 donation: web3.fromWei( note[ 3 ].toNumber(), "ether" )
+            };
+
+            scope.notesLoaded[ noteId ] = noteData;
+
+            callback( noteData );
+
+        });
+
+    };
+
+
+    /**
+     * EVM listeners
+     */
+
+    scope.setupListeners = function() {
+
+        var createEvent = instance.NoteCreated( {}, scope.blockSearch );
+        createEvent.watch( function( err, note ) {
+
+            note = note.args;
+
+            var id = note.id.toNumber();
+
+
+            //Already loaded
+
+            if( scope.notesLoaded[ id ] ) {
+
+                return;
+
+            }
+
+            scope.dispatch({
+                type: "note-created",
+                data: {
+                    maker: note.maker,
+                    id: id,
+                    donation: web3.fromWei( note.donation.toNumber(), "ether" )
+                }
             });
 
         });
 
     };
+
+
+    /**
+     * Conversion to midi / sheet music plugins
+     */
 
     scope.convertMidiToVexTab = function( midiName ) {
 

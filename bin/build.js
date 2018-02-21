@@ -49,10 +49,16 @@ if( compiled.contracts[ ":SheetMusic" ] ) {
 
 function compile( contract, name ) {
 
-    var interfaceFile = __dirname + "/../build/" + name + "-contract-abi.json";
-    var contractFile = __dirname + "/../build/deployed-" + name + "-contract.txt";
+    var interfaceFileName = name + "-contract-abi.json";
+    var contractFileName = name + "-contract.txt";
+
+    var interfaceFile = __dirname + "/../build/" + interfaceFileName;
+    var interfaceHistoryFile = __dirname + "/../build/history/" + interfaceFileName;
+    var contractFile = __dirname + "/../build/deployed-" + contractFileName;
+    var contractHistoryFile = __dirname + "/../build/history/deployed-" + contractFileName;
 
     FS.writeFileSync( interfaceFile, contract.interface );
+    FS.writeFileSync( interfaceHistoryFile, contract.interface );
 
 	var abi = JSON.parse( contract.interface );
 
@@ -80,9 +86,10 @@ function compile( contract, name ) {
 
 			myContract = contract;
 
-            console.log( 'address: ' + myContract.address );
+            console.log( "address: " + myContract.address );
 
             FS.writeFileSync( contractFile, myContract.address );
+            FS.writeFileSync( contractHistoryFile, myContract.address );
 
 		}
 

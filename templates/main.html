@@ -24,7 +24,14 @@
 
         <div id="music-navigator">
 
-            <p class="pull-right hidden-sm">Your Address : <b id="address-section"></b></p>
+            <div class="pull-right d-none d-lg-block" id="donation-top">
+                <p>Your Address : <b id="address-section"></b></p>
+                <div id="donation-bar">
+                    <span id="donation-top-raised"></span>
+                    <div id="donation-bar-fill">
+                    </div>
+                </div>
+            </div>
 
             <h1>Ether Sheet Music Project</h1>
 
@@ -56,7 +63,9 @@
 
                 <h2>What is this?</h2>
 
-                <p>This is a project that utilizes Ethereum smart contracts to create a piece of music that anyone can contribute too. All code is available here <a href="http://github.com/chuckfairy/ether-sheet-music">http://github.com/chuckfairy/ether-sheet-music</a>. If you would like to see other cool projects like this, consider sending us funds at 0xNEED_TO_FILL_IN</p>
+                <p>This is a project that utilizes Ethereum smart contracts to create a piece of music that anyone can contribute too. The question we wish to answer? Can the internet come as one to create a piece of art. Please install <a href="https://metamask.io/" target="_blank">Meta Mask</a> to view and contribute to the piece! Since this is still in alpha, point your Meta-Mask to the Ropsten test network.</p>
+
+                <p> All code is available here <a href="http://github.com/chuckfairy/ether-sheet-music">http://github.com/chuckfairy/ether-sheet-music</a>. If you would like to see other cool projects like this, consider sending us funds at 0xNEED_TO_FILL_IN</p>
 
                 <br>
 
@@ -103,20 +112,7 @@
 
             <div class="tab-pane fade" id="about" role="tabpanel" aria-labelledby="contact-tab">
 
-                <h2>About</h2>
-
-                <a href="http://github.com/chuckfairy/ether-sheet-music">http://github.com/chuckfairy/ether-sheet-music</a>
-
-                <br>
-                <br>
-
-                <h2>FAQ</h2>
-
-                <p><b>What key are we in?</b></p>
-                <p>The key of love baby</p>
-
-                <p><b>Why does this song sound like shit?</b></p>
-                <p>Were you really expecting it to sound good?</p>
+                {% include "about.html" %}
 
             </div>
 

@@ -12,6 +12,7 @@
         "web3": "*",
         "node-static": "*",
         "solc": "*",
-        "nunjucks": "*"
+        "nunjucks": "*",
+        "monolog": "*"
     }
 }
