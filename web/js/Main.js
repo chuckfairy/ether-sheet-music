@@ -18,38 +18,6 @@ function init() {
 
     EM.App.UI = new EM.UI( EM.App.Music );
 
-
-    // UI setup
-
-    setupCreateForm();
-
-}
-
-
-//Create game form
-
-function setupCreateForm() {
-
-
-    //Create form
-
-    var createForm = document.getElementById( "create-note-form" );
-
-    var donation = document.getElementById( "donation" );
-    var noteNumber = document.getElementById( "note" );
-    var noteLength = document.getElementById( "note-length" );
-
-
-    //Main submit
-
-    createForm.onsubmit = function( e ) {
-
-        e.preventDefault();
-
-        EM.App.Music.createNote( donation.value, donation.value, noteNumber.value, noteLength.value );
-
-    }
-
 }
 
 

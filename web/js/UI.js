@@ -65,6 +65,8 @@ EM.UI.prototype = {
 
         setTimeout( scope.setupAddressHeader, 250 );
 
+        scope.setupCreateForm();
+
         scope.templater = new Templater({
             templates: scope.templates
         });
@@ -133,12 +135,16 @@ EM.UI.prototype = {
 
             });
 
-            var percentRaised = Math.floor( ( vars.stats.current / vars.stats.goal ) * 100 );
+            var percentRaised = Math.ceil( ( vars.stats.current / vars.stats.goal ) * 100 );
             var donationRaisedDiv = document.getElementById( "donation-top-raised" );
             donationRaisedDiv.innerHTML = percentRaised + "% Raised";
 
             var fillBar = document.getElementById( "donation-bar-fill" );
             fillBar.style.width = percentRaised + "%";
+
+            //Create form min
+            var minArea = document.getElementById( "donation-min-form" );
+            minArea.innerHTML = vars.stats.min;
 
         });
 
@@ -169,6 +175,47 @@ EM.UI.prototype = {
         });
 
     },
+
+
+    /**
+     * Create form event setup
+     */
+
+    setupCreateForm: function() {
+
+        var scope = this;
+
+        //Create form
+
+        var createForm = document.getElementById( "create-note-form" );
+
+        var donation = document.getElementById( "donation" );
+        var noteNumber = document.getElementById( "note-midi" );
+        var noteLength = document.getElementById( "note-length" );
+
+
+        //Main submit
+
+        createForm.onsubmit = function( e ) {
+
+            e.preventDefault();
+
+            //Launch contract call
+
+            scope.Music.createNote(
+                donation.value,
+                noteNumber.value,
+                noteLength.value
+            );
+
+        }
+
+    },
+
+
+    /**
+     * New note event setup new piece and new composer add
+     */
 
     setupNewNote: function( id ) {
 

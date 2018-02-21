@@ -96,7 +96,7 @@ contract SheetMusic {
 
         //Spam check note
 
-        require( msg.value > MINIMUM_DONATION );
+        require( msg.value >= MINIMUM_DONATION );
 
         Note memory newNote = Note({
             maker: msg.sender,
