@@ -3,10 +3,13 @@ body {
     overflow-x: hidden;
 }
 
-
 /**
  * Donation top
  */
+
+#donation-top {
+    float: right;
+}
 
 #donation-top p {
     margin: 0;
@@ -22,7 +25,7 @@ body {
 }
 
 #donation-bar-fill {
-    background: #49FA26;
+    background: #28a745;
     position: absolute;
     top: 0;
     left: 0;
@@ -33,6 +36,35 @@ body {
     position: absolute;
     left: 2px;
     z-index: 10;
+}
+
+
+/**
+ * Nav
+ */
+
+.nav-item {
+    border-radius: 2px 2px 0 0;
+    border: 1px solid #000;
+    margin-right: 2px;
+    position: relative;
+}
+
+.nav-item::after {
+    width: 20px;
+    height: 50px;
+    display: block;
+    background: #000;
+    content: "";
+    position: absolute;
+    z-index: 5;
+    right: -10px;
+    top: 24px;
+    border-radius: 2px 2px 0 0;
+}
+
+.nav-item > a {
+    padding-top: 38px;
 }
 
 
@@ -84,12 +116,4 @@ body {
 
 .composer-data p {
     margin: 0;
-}
-
-
-/**
- * VexTab
- */
-.editor {
-    color: #000;
 }

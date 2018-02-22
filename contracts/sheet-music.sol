@@ -68,6 +68,15 @@ contract SheetMusic {
 
 
     /**
+     * Midi requirements
+     */
+
+    uint8 constant MIDI_LOWEST_NOTE = 21;
+
+    uint8 constant MIDI_HIGHEST_NOTE = 149;
+
+
+    /**
      * Events
      */
 
@@ -97,6 +106,12 @@ contract SheetMusic {
         //Spam check note
 
         require( msg.value >= MINIMUM_DONATION );
+
+        require( midiNote >= MIDI_LOWEST_NOTE );
+        require( midiNote <= MIDI_HIGHEST_NOTE );
+
+
+        //Create note
 
         Note memory newNote = Note({
             maker: msg.sender,

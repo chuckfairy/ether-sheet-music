@@ -13,6 +13,8 @@ EM.Music = function() {
 
     scope.notesLoaded = {};
 
+    scope.globalStats = null;;
+
 
     /**
      * Main note creator
@@ -45,9 +47,15 @@ EM.Music = function() {
 
     scope.getStats = function( callback ) {
 
-        instance.getDonationStats( function( err, response ) {
+        instance.getDonationStats( function( err, stats ) {
 
-            callback( response );
+            scope.globalStats = {
+                goal: web3.fromWei( stats[ 0 ].toNumber(), "ether" ),
+                min: web3.fromWei( stats[ 1 ].toNumber(), "ether" ),
+                current: parseFloat( web3.fromWei( stats[ 2 ].toNumber(), "ether" ) )
+            };
+
+            callback( scope.globalStats );
 
         });
 
@@ -150,6 +158,7 @@ EM.Music = function() {
     scope.setupListeners = function() {
 
         var createEvent = instance.NoteCreated( {}, scope.blockSearch );
+
         createEvent.watch( function( err, note ) {
 
             note = note.args;
@@ -165,12 +174,17 @@ EM.Music = function() {
 
             }
 
+            var donation = parseFloat( web3.fromWei( note.donation.toNumber(), "ether" ) );
+
+            scope.globalStats.current += donation;
+            console.log( scope.globalStats.current, donation );
+
             scope.dispatch({
                 type: "note-created",
                 data: {
                     maker: note.maker,
                     id: id,
-                    donation: web3.fromWei( note.donation.toNumber(), "ether" )
+                    donation: donation
                 }
             });
 

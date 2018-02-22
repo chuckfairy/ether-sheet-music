@@ -122,33 +122,8 @@ EM.UI.prototype = {
 
         scope.Music.getStats( function( stats ) {
 
-            var vars = {
-                stats: {
-                    goal: web3.fromWei( stats[ 0 ].toNumber(), "ether" ),
-                    min: web3.fromWei( stats[ 1 ].toNumber(), "ether" ),
-                    current: web3.fromWei( stats[ 2 ].toNumber(), "ether" )
-                }
-            };
-
-            scope.templater.render( "global-stats.html", vars, function( template ) {
-
-                scope.statsDom.innerHTML = template;
-
-            });
-
-            var percentRaised = Math.ceil( ( vars.stats.current / vars.stats.goal ) * 100 );
-            var donationRaisedDiv = document.getElementById( "donation-top-raised" );
-            donationRaisedDiv.innerHTML = percentRaised + "% Raised";
-
-            var fillBar = document.getElementById( "donation-bar-fill" );
-            fillBar.style.width = percentRaised + "%";
-
-            //Create form min
-            var minArea = document.getElementById( "donation-min-form" );
-            minArea.innerHTML = vars.stats.min;
-
-            var donationInput = document.getElementById( "donation" );
-            donationInput.setAttribute( "min", vars.stats.min );
+            scope.setFormMinimum();
+            scope.updateDonationStats();
 
         });
 
@@ -272,6 +247,60 @@ EM.UI.prototype = {
             );
 
         });
+
+        scope.updateDonationStats();
+
+    },
+
+
+    /**
+     * Stats
+     */
+
+    setFormMinimum: function() {
+
+        var scope = this;
+
+        var min = scope.Music.globalStats.min;
+
+
+        //Create form min
+        var minArea = document.getElementById( "donation-min-form" );
+        minArea.innerHTML = min;
+
+        var donationInput = document.getElementById( "donation" );
+        donationInput.setAttribute( "min", min );
+
+    },
+
+
+    /**
+     * Update donation stats
+     */
+
+    updateDonationStats: function() {
+
+        var scope = this;
+
+        var current = scope.Music.globalStats.current;
+        var goal = scope.Music.globalStats.goal;
+
+        var vars = {
+            stats: scope.Music.globalStats
+        };
+
+        scope.templater.render( "global-stats.html", vars, function( template ) {
+
+            scope.statsDom.innerHTML = template;
+
+        });
+
+        var percentRaised = Math.ceil( ( current / goal ) * 100 );
+        var donationRaisedDiv = document.getElementById( "donation-top-raised" );
+        donationRaisedDiv.innerHTML = percentRaised + "% Raised";
+
+        var fillBar = document.getElementById( "donation-bar-fill" );
+        fillBar.style.width = percentRaised + "%";
 
     },
 

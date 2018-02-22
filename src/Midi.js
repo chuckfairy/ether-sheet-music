@@ -21,31 +21,31 @@ Midi.NoteNumber = {
         midi: "B0"
     },
     24: {
-        midi: "C0"
+        midi: "C1"
     },
     25: {
-        midi: "C#0"
+        midi: "C#1"
     },
     26: {
-        midi: "D0"
+        midi: "D1"
     },
     27: {
-        midi: "D#0"
+        midi: "D#1"
     },
     28: {
-        midi: "E0"
+        midi: "E1"
     },
     29: {
-        midi: "F0"
+        midi: "F1"
     },
     30: {
-        midi: "F#0"
+        midi: "F#1"
     },
     31: {
-        midi: "G0"
+        midi: "G1"
     },
     32: {
-        midi: "G#0"
+        midi: "G#1"
     },
     33: {
         midi: "A1"
@@ -57,31 +57,31 @@ Midi.NoteNumber = {
         midi: "B1"
     },
     36: {
-        midi: "C1"
+        midi: "C2"
     },
     37: {
-        midi: "C#1"
+        midi: "C#2"
     },
     38: {
-        midi: "D1"
+        midi: "D2"
     },
     39: {
-        midi: "D#1"
+        midi: "D#2"
     },
     40: {
-        midi: "E1"
+        midi: "E2"
     },
     41: {
-        midi: "F1"
+        midi: "F2"
     },
     42: {
-        midi: "F#1"
+        midi: "F#2"
     },
     43: {
-        midi: "G1"
+        midi: "G2"
     },
     44: {
-        midi: "G#1"
+        midi: "G#2"
     },
     45: {
         midi: "A2"
@@ -93,31 +93,31 @@ Midi.NoteNumber = {
         midi: "B2"
     },
     48: {
-        midi: "C2"
+        midi: "C3"
     },
     49: {
-        midi: "C#2"
+        midi: "C#3"
     },
     50: {
-        midi: "D2"
+        midi: "D3"
     },
     51: {
-        midi: "D#2"
+        midi: "D#3"
     },
     52: {
-        midi: "E2"
+        midi: "E3"
     },
     53: {
-        midi: "F2"
+        midi: "F3"
     },
     54: {
-        midi: "F#2"
+        midi: "F#3"
     },
     55: {
-        midi: "G2"
+        midi: "G3"
     },
     56: {
-        midi: "G#2"
+        midi: "G#3"
     },
     57: {
         midi: "A3"
@@ -129,31 +129,31 @@ Midi.NoteNumber = {
         midi: "B3"
     },
     60: {
-        midi: "C3"
+        midi: "C4"
     },
     61: {
-        midi: "C#3"
+        midi: "C#4"
     },
     62: {
-        midi: "D3"
+        midi: "D4"
     },
     63: {
-        midi: "D#3"
+        midi: "D#4"
     },
     64: {
-        midi: "E3"
+        midi: "E4"
     },
     65: {
-        midi: "F3"
+        midi: "F4"
     },
     66: {
-        midi: "F#3"
+        midi: "F#4"
     },
     67: {
-        midi: "G3"
+        midi: "G4"
     },
     68: {
-        midi: "G#3"
+        midi: "G#4"
     },
     69: {
         midi: "A4"
@@ -165,31 +165,31 @@ Midi.NoteNumber = {
         midi: "B4"
     },
     72: {
-        midi: "C4"
+        midi: "C5"
     },
     73: {
-        midi: "C#4"
+        midi: "C#5"
     },
     74: {
-        midi: "D4"
+        midi: "D5"
     },
     75: {
-        midi: "D#4"
+        midi: "D#5"
     },
     76: {
-        midi: "E4"
+        midi: "E5"
     },
     77: {
-        midi: "F4"
+        midi: "F5"
     },
     78: {
-        midi: "F#4"
+        midi: "F#5"
     },
     79: {
-        midi: "G4"
+        midi: "G5"
     },
     80: {
-        midi: "G#4"
+        midi: "G#5"
     },
     81: {
         midi: "A5"
@@ -201,31 +201,31 @@ Midi.NoteNumber = {
         midi: "B5"
     },
     84: {
-        midi: "C5"
+        midi: "C6"
     },
     85: {
-        midi: "C#5"
+        midi: "C#6"
     },
     86: {
-        midi: "D5"
+        midi: "D6"
     },
     87: {
-        midi: "D#5"
+        midi: "D#6"
     },
     88: {
-        midi: "E5"
+        midi: "E6"
     },
     89: {
-        midi: "F5"
+        midi: "F6"
     },
     90: {
-        midi: "F#5"
+        midi: "F#6"
     },
     91: {
-        midi: "G5"
+        midi: "G6"
     },
     92: {
-        midi: "G#5"
+        midi: "G#6"
     },
     93: {
         midi: "A6"
@@ -237,31 +237,31 @@ Midi.NoteNumber = {
         midi: "B6"
     },
     96: {
-        midi: "C6"
+        midi: "C7"
     },
     97: {
-        midi: "C#6"
+        midi: "C#7"
     },
     98: {
-        midi: "D6"
+        midi: "D7"
     },
     99: {
-        midi: "D#6"
+        midi: "D#7"
     },
     100: {
-        midi: "E6"
+        midi: "E7"
     },
     101: {
-        midi: "F6"
+        midi: "F7"
     },
     102: {
-        midi: "F#6"
+        midi: "F#7"
     },
     103: {
-        midi: "G6"
+        midi: "G7"
     },
     104: {
-        midi: "G#6"
+        midi: "G#7"
     },
     105: {
         midi: "A7"
@@ -273,31 +273,31 @@ Midi.NoteNumber = {
         midi: "B7"
     },
     108: {
-        midi: "C7"
+        midi: "C8"
     },
     109: {
-        midi: "C#7"
+        midi: "C#8"
     },
     110: {
-        midi: "D7"
+        midi: "D8"
     },
     111: {
-        midi: "D#7"
+        midi: "D#8"
     },
     112: {
-        midi: "E7"
+        midi: "E8"
     },
     113: {
-        midi: "F7"
+        midi: "F8"
     },
     114: {
-        midi: "F#7"
+        midi: "F#8"
     },
     115: {
-        midi: "G7"
+        midi: "G8"
     },
     116: {
-        midi: "G#7"
+        midi: "G#8"
     },
     117: {
         midi: "A8"
@@ -309,31 +309,31 @@ Midi.NoteNumber = {
         midi: "B8"
     },
     120: {
-        midi: "C8"
+        midi: "C9"
     },
     121: {
-        midi: "C#8"
+        midi: "C#9"
     },
     122: {
-        midi: "D8"
+        midi: "D9"
     },
     123: {
-        midi: "D#8"
+        midi: "D#9"
     },
     124: {
-        midi: "E8"
+        midi: "E9"
     },
     125: {
-        midi: "F8"
+        midi: "F9"
     },
     126: {
-        midi: "F#8"
+        midi: "F#9"
     },
     127: {
-        midi: "G8"
+        midi: "G9"
     },
     128: {
-        midi: "G#8"
+        midi: "G#9"
     },
     129: {
         midi: "A9"
@@ -345,31 +345,31 @@ Midi.NoteNumber = {
         midi: "B9"
     },
     132: {
-        midi: "C9"
+        midi: "C10"
     },
     133: {
-        midi: "C#9"
+        midi: "C#10"
     },
     134: {
-        midi: "D9"
+        midi: "D10"
     },
     135: {
-        midi: "D#9"
+        midi: "D#10"
     },
     136: {
-        midi: "E9"
+        midi: "E10"
     },
     137: {
-        midi: "F9"
+        midi: "F10"
     },
     138: {
-        midi: "F#9"
+        midi: "F#10"
     },
     139: {
-        midi: "G9"
+        midi: "G10"
     },
     140: {
-        midi: "G#9"
+        midi: "G#10"
     },
     141: {
         midi: "A10"
@@ -381,22 +381,22 @@ Midi.NoteNumber = {
         midi: "B10"
     },
     144: {
-        midi: "C10"
+        midi: "C11"
     },
     145: {
-        midi: "C#10"
+        midi: "C#11"
     },
     146: {
-        midi: "D10"
+        midi: "D11"
     },
     147: {
-        midi: "D#10"
+        midi: "D#11"
     },
     148: {
-        midi: "E10"
+        midi: "E11"
     },
     149: {
-        midi: "F10"
+        midi: "F11"
     }
 };
 

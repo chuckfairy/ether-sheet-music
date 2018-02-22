@@ -13,6 +13,7 @@
         "node-static": "*",
         "solc": "*",
         "nunjucks": "*",
-        "monolog": "*"
+        "monolog": "*",
+        "chai": "*"
     }
 }
