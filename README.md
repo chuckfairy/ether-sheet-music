@@ -1,14 +1,14 @@
 # Ether Sheet Music Donation Project
 
-- using http://www.vexflow.com/vextab/playground/?foo
+
+# Links
+
+- https://github.com/paulrosen/abcjs
 
 
 # TODO
 
-- Note validation on form
-- Create form min value dynmaic
-- Note viewer on form
-- Length in readable form
+- midi numbers fix (C4 is the start of the 4s B4 being the last). Not starting on A like Orzabal
 - dotted sixtenth in abc
 - Midi download fix
 - Update percentage raised after new note

@@ -407,15 +407,15 @@ Midi.NoteNumber = {
  */
 
 Midi.NoteLength = {
-    0: "WHOLE_NOTE",
-    1: "DOTTED_HALF_NOTE",
-    2: "HALF_NOTE",
-    3: "DOTTED_QUARTER_NOTE",
-    4: "QUARTER_NOTE",
-    5: "DOTTED_EIGHTH_NOTE",
-    6: "EIGHTH_NOTE",
-    7: "DOTTED_SIXTEENTH_NOTE",
-    8: "SIXTEENTH_NOTE"
+    0: "Whole Note",
+    1: "Dotted Half Note",
+    2: "Half Note",
+    3: "Dotted Quarter Note",
+    4: "Quarter Note",
+    5: "Dotted Eighth Note",
+    6: "Eighth Note",
+    7: "Dotted Sixteenth Note",
+    8: "Sixteenth Note"
 };
 
 

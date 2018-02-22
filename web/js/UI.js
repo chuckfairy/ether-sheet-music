@@ -29,7 +29,8 @@ EM.UI.prototype = {
     templates: [
         "composer-note.html",
         "global-stats.html",
-        "vextab-piece.html"
+        "abc-piece.html",
+        "abc-note.html"
     ],
 
     pieceDom: null,
@@ -146,6 +147,9 @@ EM.UI.prototype = {
             var minArea = document.getElementById( "donation-min-form" );
             minArea.innerHTML = vars.stats.min;
 
+            var donationInput = document.getElementById( "donation" );
+            donationInput.setAttribute( "min", vars.stats.min );
+
         });
 
     },
@@ -193,6 +197,8 @@ EM.UI.prototype = {
         var noteNumber = document.getElementById( "note-midi" );
         var noteLength = document.getElementById( "note-length" );
 
+        var creatorView = document.getElementById( "note-creator-view" );
+
 
         //Main submit
 
@@ -207,6 +213,32 @@ EM.UI.prototype = {
                 noteNumber.value,
                 noteLength.value
             );
+
+        };
+
+        noteNumber.onchange = updateCreatorView;
+        noteLength.onchange = updateCreatorView;
+        updateCreatorView();
+
+        function updateCreatorView() {
+
+            if( noteNumber.value === "" || noteLength.value === "" ) {
+
+                creatorView.innerHTML = "";
+                return;
+
+            }
+
+            var note = scope.Music.convertMidiToABC(
+                Midi.NoteNumber[ noteNumber.value|0 ].midi
+            );
+
+            var length = Midi.ABC.NoteLength[ noteLength.value|0 ]
+
+            var abc = "L: 1/8\n" +
+                ":" + note + length;
+
+            ABCJS.renderAbc( creatorView, abc );
 
         }
 
@@ -304,7 +336,7 @@ EM.UI.prototype = {
                 template
             );
 
-            scope.setupComposerVexTab();
+            scope.setupComposerABC();
 
         });
 
@@ -315,7 +347,7 @@ EM.UI.prototype = {
      * Set vextab sheet music
      */
 
-    setupComposerVexTab: function() {
+    setupComposerABC: function() {
 
         var scope = this;
 

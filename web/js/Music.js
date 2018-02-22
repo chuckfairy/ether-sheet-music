@@ -193,8 +193,8 @@ EM.Music = function() {
 
     scope.convertMidiToABC = function( midiName, length ) {
 
-        var abc = midiName.replace( /(\w)\#?(\d)/, "\$1" );
-        var midiNumber = midiName.replace( /.*(\d.*)/, "\$1" ) | 0;
+        var abc = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
+        var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
         var sharp = midiName.indexOf( "#" ) !== -1;
 
         //Uppercase if over middle 4
