@@ -14,6 +14,9 @@ var Solc = require( "solc" );
 
 
 const MAIN_ADDRESS = web.eth.accounts[ 0 ];
+//web.personal.unlockAccount( MAIN_ADDRESS, "" );
+
+//console.log( MAIN_ADDRESS, web.eth.getBalance( MAIN_ADDRESS ).toNumber() );
 
 
 //Code
@@ -62,16 +65,31 @@ function compile( contract, name ) {
 
 	var abi = JSON.parse( contract.interface );
 
-    var creator = web.eth.accounts[ 0 ];
+    var creator = MAIN_ADDRESS;
     var weiBet = 1000;
     var secondsPerMove = 500;
     var waitTime = 500;
 
+    var contractByteCode  = "0x" + contract.bytecode;
+
+    var contractFactory = web.eth.contract( abi );
+
+
+    //Estimate Gas
+
+    var contractData = contractFactory.new.getData( { data: contractByteCode } );
+
+    //console.log( contractData );
+    var estimate = web.eth.estimateGas( { data: contractData } );
+
 	var data = {
-		from: web.eth.accounts[0],
-		data: "0x" + contract.bytecode,
-		gas: 3000000
+		from: MAIN_ADDRESS,
+		data: contractByteCode,
+        gas: estimate,
+        gasPrice: web.eth.gasPrice
 	};
+
+
 
 
 	// create contract

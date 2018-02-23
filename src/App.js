@@ -11,9 +11,12 @@ var Templater = require( "./Templater.js" );
 
 var HTTPResponse = require( "./HTTPResponse.js" );
 
-var HTML_CONTENT;
-
 var Midi = require( "./Midi.js" );
+
+//Globals
+
+var HTTP, HTML_CONTENT, SheetMusic;
+
 
 
 //Main
@@ -24,8 +27,6 @@ function init() {
 
     setupContent();
 
-    setupHTTP();
-
 }
 
 
@@ -33,23 +34,47 @@ function init() {
 
 function setupContent() {
 
-    var contract = Contract.getContract( "sheet-music" );
+    SheetMusic = new Contract;
+
+    SheetMusic.buildNotes( function() {
+
+        setupHTTP();
+
+        renderContent();
+
+    });
+
+    SheetMusic.on( "note-created", function() {
+
+        renderContent();
+
+    });
+
+    SheetMusic.setupListeners();
+
+}
+
+function renderContent() {
+
+    var contract = SheetMusic.instance;
 
     var vars = {
         abi: JSON.stringify( contract.abi ),
         contract: contract,
-        Midi: Midi
+        Midi: Midi,
+        notes: SheetMusic.loadedNotes
     };
 
     HTML_CONTENT = Templater.getTemplate( "main.html", vars );
 
-}
+    HTTP.indexContent = HTML_CONTENT;
 
+}
 
 //Setup http server
 
 function setupHTTP() {
 
-    var HTTP = new HTTPResponse( HTML_CONTENT );
+    HTTP = new HTTPResponse( HTML_CONTENT );
 
 }

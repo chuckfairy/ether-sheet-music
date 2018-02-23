@@ -14,6 +14,9 @@ EM.App = {
 
 function init() {
 
+    contract = web3.eth.contract( abi );
+    instance = contract.at( ADDRESS );
+
     EM.App.Music = new EM.Music;
 
     EM.App.UI = new EM.UI( EM.App.Music );
@@ -29,7 +32,7 @@ window.addEventListener( "load", function() {
 
     if( typeof( web3 ) === "undefined" ) {
 
-        alert( "Meta Mask not installed" );
+        alert( "Meta Mask not installed, please install at http://metamask.io" );
 
         throw new Error( "Meta Mask not Installed" );
 
@@ -41,15 +44,21 @@ window.addEventListener( "load", function() {
 
     web3.eth.getAccounts( function( err, accounts ) {
 
-        web3.eth.defaultAccount = web3.eth.accounts[ 0 ];
-
         if( err || ! accounts || ! accounts.length ) {
 
             return alert( "Please login to Metamask and connect to ropsten test net" );
 
         }
 
-        init();
+        web3.eth.defaultAccount = web3.eth.accounts[ 0 ];
+
+        web3.eth.getGasPrice( function( err, price ) {
+
+            GAS_PRICE = price;
+
+            init();
+
+        });
 
     });
 

@@ -138,7 +138,9 @@ EM.UI.prototype = {
 
         var scope = this;
 
-        scope.Music.getComposerStats( function( composers ) {
+        scope.Music.setupComposers( function( composers ) {
+
+            composers = Object.values( composers );
 
             scope.renderPiece( composers );
 

@@ -59,6 +59,7 @@ Run
 - dotted sixtenth in abc
 - Midi download fix
 - Gas estimation
+- Keep cache of current score for quicker loading
 
 
 ## Maybes

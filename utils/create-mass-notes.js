@@ -5,9 +5,11 @@
 
 var Contract = require( "../src/Contract.js" );
 
-var web = Contract.getWeb();
+var SheetMusic = new Contract;
 
-var creator = Contract.getContract( "sheet-music" );
+var web = SheetMusic.getWeb();
+
+var creator = SheetMusic.instance;
 
 var trans = {
     from: web.eth.accounts[ 0 ],
