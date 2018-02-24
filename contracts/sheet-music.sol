@@ -180,7 +180,7 @@ contract SheetMusic {
 
     }
 
-    function getNote( uint id ) public view returns (
+    function getNote( uint id ) external view returns (
         address,
         uint8,
         NoteLength,

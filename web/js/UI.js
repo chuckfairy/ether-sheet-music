@@ -207,13 +207,12 @@ EM.UI.prototype = {
             }
 
             var note = scope.Music.convertMidiToABC(
-                Midi.NoteNumber[ noteNumber.value|0 ].midi
+                Midi.NoteNumber[ noteNumber.value|0 ].midi,
+                noteLength.value|0
             );
 
-            var length = Midi.ABC.NoteLength[ noteLength.value|0 ]
-
             var abc = "L: 1/8\n" +
-                ":" + note + length;
+                ":" + note;
 
             ABCJS.renderAbc( creatorView, abc );
 

@@ -56,10 +56,9 @@ Run
 
 # TODO
 
-- dotted sixtenth in abc
-- Midi download fix
+- Modal instructions
 - Gas estimation
-- Keep cache of current score for quicker loading
+- Midi download fix
 
 
 ## Maybes

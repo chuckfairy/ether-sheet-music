@@ -11,7 +11,7 @@ EM.Music = function() {
         fromBlock: "latest"
     };
 
-    scope.notesLoaded = NOTES || null;
+    scope.notesLoaded = NOTES.length ? NOTES : null;
 
     scope.globalStats = null;;
 
@@ -227,7 +227,6 @@ EM.Music = function() {
             },
             abc: {
                 note: midiABC,
-                length: lengthABC
             },
             length: length,
             lengthName: Midi.NoteLength[ length ],
@@ -256,6 +255,9 @@ EM.Music = function() {
         var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
         var sharp = midiName.indexOf( "#" ) !== -1;
 
+        var lengthABC = Midi.ABC.NoteLength[ length ];
+
+
         //Uppercase if over middle 4
         var lowerCase = midiNumber > 4;
         var appendage;
@@ -276,6 +278,21 @@ EM.Music = function() {
         if( sharp ) {
 
             abc = "^" + abc;
+
+        }
+
+
+        //Dotted sixteenth remains to be found
+        //Use a tying system
+
+        if( length === 7 ) {
+
+            abc = "(" + abc + Midi.ABC.NoteLength[ 8 ]
+                + " " + abc + "/4)";
+
+        } else {
+
+            abc = abc + lengthABC;
 
         }
 
