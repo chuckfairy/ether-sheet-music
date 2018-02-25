@@ -13,7 +13,7 @@
         "node-static": "*",
         "solc": "*",
         "nunjucks": "*",
-        "monolog": "*",
+        "winston": "*",
         "async": "*"
     },
     "devDependencies": {

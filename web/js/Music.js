@@ -11,7 +11,7 @@ EM.Music = function() {
         fromBlock: "latest"
     };
 
-    scope.notesLoaded = NOTES.length ? NOTES : null;
+    scope.notesLoaded = typeof( NOTES[ 1 ] ) !== "undefined" ? NOTES : null;
 
     scope.globalStats = null;;
 

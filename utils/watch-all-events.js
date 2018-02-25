@@ -5,9 +5,23 @@
 
 var Contract = require( "../src/Contract.js" );
 
-var web = Contract.getWeb();
+var SheetMusic = new Contract;
 
-var creator = Contract.getContract( "sheet-music" );
+var web = SheetMusic.getWeb();
+
+var creator = SheetMusic.instance;
+
+
+//Setup logger
+
+var Log = require( "../src/Log.js" );
+
+var LOG_FILE = __dirname + "/../log/events.log";
+
+var EventLog = new Log( LOG_FILE );
+
+
+//Watch all events
 
 var event = creator.allEvents( {}, { fromBlock: "latest", toBlock: "latest" } );
 
@@ -19,9 +33,7 @@ event.watch(function( err, results ) {
 
     }
 
-    console.log( "EVENT : " + results.event );
-
-    console.log( results.args );
+    EventLog.logger.info( JSON.stringify( results ) );
 
 });
 

@@ -3,11 +3,13 @@
  */
 "use strict";
 
-var Contract = require( "./../src/Contract.js" );
+var Contract = require( "../src/Contract.js" );
 
-var web = Contract.getWeb();
+var SheetMusic = new Contract;
 
-var Instance = Contract.getContract( "sheet-music" );
+var web = SheetMusic.getWeb();
+
+var Instance = SheetMusic.instance;
 
 var Chai = require( "chai" );
 
