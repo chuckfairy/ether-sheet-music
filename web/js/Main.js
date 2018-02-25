@@ -44,6 +44,8 @@ window.addEventListener( "load", function() {
 
     web3.eth.getAccounts( function( err, accounts ) {
 
+        init();
+
         if( err || ! accounts || ! accounts.length ) {
 
             return alert( "Please login to Metamask and connect to ropsten test net" );
@@ -55,8 +57,6 @@ window.addEventListener( "load", function() {
         web3.eth.getGasPrice( function( err, price ) {
 
             GAS_PRICE = price;
-
-            init();
 
         });
 
