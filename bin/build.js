@@ -98,7 +98,7 @@ function compile( contract, name ) {
 
 		if( err ) {
 
-			console.error(err);
+			console.error( err );
 
 		} else if(contract.address){
 

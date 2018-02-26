@@ -24,6 +24,7 @@ var Contract = function() {
 
     var scope = this;
 
+    scope.factory = null;
     scope.instance = scope.getContract( "sheet-music" );
 
 };
@@ -45,6 +46,8 @@ Contract.prototype = {
 
     getContract: function( name, address ) {
 
+        var scope = this;
+
         var interfaceFile = __dirname + "/../build/" + name + "-contract-abi.json";
         var contractFile = __dirname + "/../build/deployed-" + name + "-contract.txt";
 
@@ -52,7 +55,9 @@ Contract.prototype = {
 
         const ADDR = FS.readFileSync( contractFile ).toString().trim();
 
-        var contract = web.eth.contract( CODE ).at( ADDR );
+        scope.factory = web.eth.contract( CODE );
+
+        var contract = scope.factory.at( ADDR );
 
         return contract;
 

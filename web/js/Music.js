@@ -34,7 +34,10 @@ EM.Music = function() {
 
             }
 
-            console.log( response );
+            scope.dispatch({
+                type: "user-note-created",
+                data: response
+            });
 
         });
 
@@ -208,46 +211,32 @@ EM.Music = function() {
         var midi = note[ 1 ] | 0;
         var length = note[ 2 ] | 0;
 
-        var midiData = Midi.NoteNumber[ midi ];
-        var midiVex = scope.convertMidiToVexTab( midiData.midi );
+        var midiData = Midi.NoteNumber[ midi ] || {};
 
         var midiABC = scope.convertMidiToABC( midiData.midi, length );
         var lengthABC = Midi.ABC.NoteLength[ length ];
-
-        var lengthVex = Midi.VexTab.NoteLength[ length ];
 
         var noteData = {
             id: noteId,
             maker: note[ 0 ],
             midi: midi,
             midiData: midiData,
-            vexTab: {
-                midi: midiVex,
-                length: lengthVex
-            },
             abc: {
                 note: midiABC,
             },
             length: length,
             lengthName: Midi.NoteLength[ length ],
-            donation: web3.fromWei( note[ 3 ], "ether" )
+            donation: EM.Shim.fromWei( note[ 3 ] )
         };
 
         return noteData;
 
     };
 
+
     /**
-    * Conversion to midi / sheet music plugins
-        */
-
-        scope.convertMidiToVexTab = function( midiName ) {
-
-            var vexName = midiName.replace( /(\d.*)/, "\/\$1" );
-
-            return vexName;
-
-        };
+     * Conversion to midi / sheet music plugins
+     */
 
     scope.convertMidiToABC = function( midiName, length ) {
 
@@ -265,11 +254,11 @@ EM.Music = function() {
         if( lowerCase ) {
 
             abc = abc.toLowerCase();
-            appendage = "'".repeat( midiNumber - 5 );
+            appendage = EM.Shim.repeat( "'", midiNumber - 5 );
 
         } else {
 
-            appendage = ",".repeat( Math.abs( midiNumber - 4 ) );
+            appendage = EM.Shim.repeat( ",", Math.abs( midiNumber - 4 ) );
 
         }
 

@@ -56,8 +56,7 @@ Run
 
 # TODO
 
-- Modal instructions
-- Gas estimation
+- Account for Devs
 - Midi download fix
 
 

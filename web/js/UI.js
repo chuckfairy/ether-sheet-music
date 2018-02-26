@@ -48,6 +48,9 @@ EM.UI.prototype = {
     messagesId: "message-area",
     messageTime: 5000,
 
+    createForm: null,
+    createFormId: "create-note-form",
+
     newNoteCreated: false,
 
 
@@ -64,7 +67,7 @@ EM.UI.prototype = {
         scope.composersDom = document.getElementById( scope.composersId );
         scope.messagesDom = document.getElementById( scope.messagesId );
 
-        setTimeout( scope.setupAddressHeader, 250 );
+        scope.createForm = document.getElementById( scope.createFormId );
 
         scope.setupCreateForm();
 
@@ -74,8 +77,8 @@ EM.UI.prototype = {
 
         scope.templater.compile( function() {
 
-            scope.setupStats();
             scope.setupComposerStats();
+            scope.setupStats();
 
         });
 
@@ -93,9 +96,11 @@ EM.UI.prototype = {
 
         scope.Music.on( "user-note-created", function( result ) {
 
-            scope.setMessage( "You created a note!" );
+            scope.userNoteCreated( result.data );
 
         });
+
+        setTimeout( scope.setupAddressHeader, 250 );
 
     },
 
@@ -140,7 +145,7 @@ EM.UI.prototype = {
 
         scope.Music.setupComposers( function( composers ) {
 
-            composers = Object.values( composers );
+            composers = EM.Shim.getValues( composers );
 
             scope.renderPiece( composers );
 
@@ -168,8 +173,6 @@ EM.UI.prototype = {
 
         //Create form
 
-        var createForm = document.getElementById( "create-note-form" );
-
         var donation = document.getElementById( "donation" );
         var noteNumber = document.getElementById( "note-midi" );
         var noteLength = document.getElementById( "note-length" );
@@ -179,7 +182,7 @@ EM.UI.prototype = {
 
         //Main submit
 
-        createForm.onsubmit = function( e ) {
+        scope.createForm.onsubmit = function( e ) {
 
             e.preventDefault();
 
@@ -244,7 +247,7 @@ EM.UI.prototype = {
             scope.renderComposerNotes( [ note ] );
 
             scope.renderPiece(
-                Object.values( scope.Music.notesLoaded )
+                EM.Shim.getValues( scope.Music.notesLoaded )
             );
 
         });
@@ -271,6 +274,31 @@ EM.UI.prototype = {
 
         var donationInput = document.getElementById( "donation" );
         donationInput.setAttribute( "min", min );
+
+    },
+
+
+    /**
+     * User note created
+     */
+
+    userNoteCreated: function( txHash ) {
+
+        var scope = this;
+
+        scope.createForm.reset();
+
+        scope.setMessage( "You created a note!" );
+
+        var url = "https://ropsten.etherscan.io/tx/" + txHash;
+        var urlLink = "<a href='" + url + "' target='_blank'>" + url + "</a>";
+
+        var div = document.getElementById( "music-note-created" );
+
+        div.innerHTML =
+            "Thank you, your note has been submitted.<br>View the transaction here " + urlLink;
+
+        div.style.display = "block";
 
     },
 
@@ -420,8 +448,8 @@ EM.UI.prototype = {
 
         setTimeout( function() {
 
-            scope.messagesDom.innerHTML = "";
             scope.messagesDom.style.display = "none";
+            scope.messagesDom.innerHTML = "";
 
         }, scope.messageTime );
 

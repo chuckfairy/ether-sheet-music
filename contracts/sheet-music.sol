@@ -1,5 +1,5 @@
 /**
- * 100 ether sheet music
+ * Ether sheet music
  */
 
 pragma solidity ^0.4.11;
@@ -68,12 +68,19 @@ contract SheetMusic {
 
 
     /**
+     * Owner used for transfer
+     */
+
+    address private owner = msg.sender;
+
+
+    /**
      * Midi requirements
      */
 
     uint8 constant MIDI_LOWEST_NOTE = 21;
 
-    uint8 constant MIDI_HIGHEST_NOTE = 149;
+    uint8 constant MIDI_HIGHEST_NOTE = 108;
 
 
     /**
@@ -84,7 +91,9 @@ contract SheetMusic {
 
     event DonationCreated( address indexed maker, uint donation );
 
-    event DonationGoalReached( address theCoolestFuckingCat );
+    event DonationGoalReached( address MrCool );
+
+    event DonationTransfered( address donatee );
 
 
     /**
@@ -214,6 +223,29 @@ contract SheetMusic {
             MINIMUM_DONATION,
             this.balance
         );
+
+    }
+
+
+    /**
+     * Finishers
+     */
+
+    function transfer( address toAddress ) external {
+
+        require( owner == msg.sender );
+
+        toAddress.transfer( this.balance );
+
+        DonationTransfered( toAddress );
+
+    }
+
+    function kill() external {
+
+        require( owner == msg.sender );
+
+        selfdestruct( owner );
 
     }
 

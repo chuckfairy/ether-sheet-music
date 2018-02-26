@@ -4,7 +4,6 @@
  */
 "use strict";
 
-
 //init
 
 EM.App = {
@@ -13,9 +12,6 @@ EM.App = {
 };
 
 function init() {
-
-    contract = web3.eth.contract( abi );
-    instance = contract.at( ADDRESS );
 
     EM.App.Music = new EM.Music;
 
@@ -30,21 +26,24 @@ window.addEventListener( "load", function() {
 
     //Check if even installed
 
-    if( typeof( web3 ) === "undefined" ) {
+    if( typeof( Web3 ) === "undefined" && typeof( web3 ) === "undefined" ) {
 
         alert( "Meta Mask not installed, please install at http://metamask.io" );
 
-        throw new Error( "Meta Mask not Installed" );
+        return init();
 
     }
 
     // Check if logged in
 
+    init();
+
     web3 = new Web3( web3.currentProvider );
 
-    web3.eth.getAccounts( function( err, accounts ) {
+    contract = web3.eth.contract( abi );
+    instance = contract.at( ADDRESS );
 
-        init();
+    web3.eth.getAccounts( function( err, accounts ) {
 
         if( err || ! accounts || ! accounts.length ) {
 
