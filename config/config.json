@@ -1,0 +1,5 @@
+{
+    "server": "http://localhost",
+    "port": "8545",
+    "web_port": "9090"
+}

@@ -4,9 +4,11 @@ var FS = require( "fs" );
 
 //Eth depends
 
+var Config = require( "../src/Config.js" );
+
 var Web3 = require( "web3" );
 
-var Web3Provider = new Web3.providers.HttpProvider( "http://localhost:8545" );
+var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation() );
 
 var web = new Web3( Web3Provider );
 

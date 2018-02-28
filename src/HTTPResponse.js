@@ -17,13 +17,13 @@ var Path = require( "path" );
 
 //Main class
 
-var HTTPResponse = function( content ) {
+var HTTPResponse = function( content, opts ) {
 
     var scope = this;
 
     scope.indexContent = content;
 
-    scope.opts = Utils.setDefaults( {}, HTTPResponse.Defaults );
+    scope.opts = Utils.setDefaults( opts, HTTPResponse.Defaults );
 
     scope.init();
 

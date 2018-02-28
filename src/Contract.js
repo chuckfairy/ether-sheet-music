@@ -9,9 +9,11 @@ var Async = require( "async" );
 
 var Dispatcher = require( "./utils/EventDispatcher.js" );
 
+var Config = require( "./Config.js" );
+
 var Web3 = require( "web3" );
 
-var Web3Provider = new Web3.providers.HttpProvider( "http://localhost:8545" );
+var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation() );
 
 var web = new Web3( Web3Provider );
 

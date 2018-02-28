@@ -3,8 +3,6 @@
  */
 "use strict";
 
-const PORT = 9090;
-
 var Contract = require( "./Contract.js" );
 
 var Templater = require( "./Templater.js" );
@@ -12,6 +10,9 @@ var Templater = require( "./Templater.js" );
 var HTTPResponse = require( "./HTTPResponse.js" );
 
 var Midi = require( "./Midi.js" );
+
+var Config = require( "./Config.js" );
+
 
 //Globals
 
@@ -75,6 +76,8 @@ function renderContent() {
 
 function setupHTTP() {
 
-    HTTP = new HTTPResponse( HTML_CONTENT );
+    HTTP = new HTTPResponse( HTML_CONTENT, {
+        port: Config.getConfig().web_port
+    });
 
 }
