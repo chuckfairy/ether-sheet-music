@@ -4,7 +4,47 @@
 
 pragma solidity ^0.4.11;
 
-contract SheetMusic {
+
+/**
+ * Ownable contract base
+ */
+
+contract OwnableContract {
+
+    address private owner;
+
+    function OwnableContract() public {
+
+        owner = msg.sender;
+
+    }
+
+    modifier onlyOwner() {
+
+        require( msg.sender == owner );
+        _;
+
+    }
+
+    function getOwner() public view returns ( address ) {
+
+        return owner;
+
+    }
+
+    function changeOwner( address newOwner ) onlyOwner public {
+
+        owner = newOwner;
+
+    }
+}
+
+
+/**
+ * Main sheet music contract
+ */
+
+contract SheetMusic is OwnableContract {
 
     /**
      * Note lengths
@@ -58,6 +98,8 @@ contract SheetMusic {
 
     uint private numNotes;
 
+    uint private totalValue;
+
     uint constant DONATION_GOAL = 100 ether;
 
     uint constant MINIMUM_DONATION = 0.01 ether;
@@ -65,13 +107,6 @@ contract SheetMusic {
     bool private donationMet = false;
 
     mapping( address => string ) private composers;
-
-
-    /**
-     * Owner used for transfer
-     */
-
-    address private owner = msg.sender;
 
 
     /**
@@ -100,9 +135,7 @@ contract SheetMusic {
      * Construct
      */
 
-    function SheetMusic() public {
-
-    }
+    function SheetMusic() public {}
 
 
     /**
@@ -131,6 +164,8 @@ contract SheetMusic {
 
         notes[ ++ numNotes ] = newNote;
 
+        totalValue += msg.value;
+
         NoteCreated( msg.sender, numNotes, msg.value );
 
         checkGoal( msg.sender );
@@ -144,6 +179,8 @@ contract SheetMusic {
 
     function () external payable {
 
+        totalValue += msg.value;
+
         checkGoal( msg.sender );
 
     }
@@ -154,6 +191,8 @@ contract SheetMusic {
      */
 
     function donate() external payable {
+
+        totalValue += msg.value;
 
         DonationCreated( msg.sender, msg.value );
 
@@ -168,7 +207,7 @@ contract SheetMusic {
 
     function checkGoal( address maker ) internal {
 
-        if( this.balance >= DONATION_GOAL && ! donationMet ) {
+        if( totalValue >= DONATION_GOAL && ! donationMet ) {
 
             donationMet = true;
 
@@ -180,7 +219,7 @@ contract SheetMusic {
 
 
     /**
-     * Getters
+     * Getters for notes
      */
 
     function getNumberOfNotes() external view returns ( uint ) {
@@ -221,8 +260,14 @@ contract SheetMusic {
         return (
             DONATION_GOAL,
             MINIMUM_DONATION,
-            this.balance
+            totalValue
         );
+
+    }
+
+    function getTotalDonated() external view returns( uint ) {
+
+        return totalValue;
 
     }
 
@@ -231,9 +276,7 @@ contract SheetMusic {
      * Finishers
      */
 
-    function transfer( address toAddress ) external {
-
-        require( owner == msg.sender );
+    function transferAll( address toAddress ) onlyOwner external {
 
         toAddress.transfer( this.balance );
 
@@ -241,11 +284,17 @@ contract SheetMusic {
 
     }
 
-    function kill() external {
+    function transfer( address toAddress, uint amount ) onlyOwner external {
 
-        require( owner == msg.sender );
+        toAddress.transfer( amount );
 
-        selfdestruct( owner );
+        DonationTransfered( toAddress );
+
+    }
+
+    function kill() onlyOwner external {
+
+        selfdestruct( getOwner() );
 
     }
 

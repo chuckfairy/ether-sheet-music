@@ -9,6 +9,10 @@ module.exports = {
 
     "2": "morden",
 
-    "3": "ropsten"
+    "3": "ropsten",
+
+    "4": "rinkeby",
+
+    "42": "kovan"
 
 };

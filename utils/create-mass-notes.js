@@ -5,6 +5,8 @@
 
 var Contract = require( "../src/Contract.js" );
 
+var RandomNote = require( "./lib/random-note.js" );
+
 var SheetMusic = new Contract;
 
 var web = SheetMusic.getWeb();
@@ -25,15 +27,11 @@ for( var i = 0; i < 100; ++ i ) {
 
 function createNote() {
 
-    var midi = ( Math.random() * 100 ) + 25;
-    midi = Math.floor( midi );
+    var note = RandomNote();
 
-    var length = ( Math.random() * 8 );
-    length = Math.floor( length );
+    console.log( "CREATING", note[ 0 ], note[ 1 ]);
 
-    console.log( "CREATING", midi, length );
-
-    creator.createNote( midi, length, trans, function( err, game ) {
+    creator.createNote( note[ 0 ], note[ 1 ], trans, function( err, game ) {
 
         if( err ) {
 

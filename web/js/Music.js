@@ -13,7 +13,7 @@ EM.Music = function() {
 
     scope.notesLoaded = typeof( NOTES[ 1 ] ) !== "undefined" ? NOTES : null;
 
-    scope.globalStats = null;;
+    scope.globalStats = GLOBAL_STATS || null;
 
 
     /**
@@ -49,6 +49,13 @@ EM.Music = function() {
      */
 
     scope.getStats = function( callback ) {
+
+        if( scope.globalStats ) {
+
+            callback( scope.globalStats );
+            return;
+
+        }
 
         instance.getDonationStats( function( err, stats ) {
 
@@ -286,6 +293,43 @@ EM.Music = function() {
         }
 
         return abc;
+
+    };
+
+
+    /**
+     * Network helpers
+     */
+
+    scope.getNetworkEtherscan = function() {
+
+        var net = web3.version.network;
+
+        if( net === "1" ) {
+
+            return "";
+
+        }
+
+        if( Networks[ net ] ) {
+
+            return Networks[ net ] + ".";
+
+        }
+
+        //console.warn( "No etherscan for network " + net );
+
+        return "";
+
+    };
+
+    scope.getTransactionUrl = function( txHash ) {
+
+        var network = scope.getNetworkEtherscan();
+
+        var url = "https://" + network + "etherscan.io/tx/" + txHash;
+
+        return url;
 
     };
 

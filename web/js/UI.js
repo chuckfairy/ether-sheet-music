@@ -290,7 +290,7 @@ EM.UI.prototype = {
 
         scope.setMessage( "You created a note!" );
 
-        var url = "https://ropsten.etherscan.io/tx/" + txHash;
+        var url = scope.Music.getTransactionUrl( txHash );
         var urlLink = "<a href='" + url + "' target='_blank'>" + url + "</a>";
 
         var div = document.getElementById( "music-note-created" );
@@ -384,7 +384,8 @@ EM.UI.prototype = {
         var scope = this;
 
         var vars = {
-            composers: composers
+            composers: composers,
+            network: scope.Music.getNetworkEtherscan()
         };
 
         scope.templater.render( "composer-note.html", vars, function( template ) {

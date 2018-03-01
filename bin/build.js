@@ -14,6 +14,8 @@ var web = new Web3( Web3Provider );
 
 var Solc = require( "solc" );
 
+var BUILD_NAME = process.argv[ 2 ] ? process.argv[ 2 ] + "-" : "";
+
 
 const MAIN_ADDRESS = web.eth.accounts[ 0 ];
 //web.personal.unlockAccount( MAIN_ADDRESS, "" );
@@ -54,8 +56,8 @@ if( compiled.contracts[ ":SheetMusic" ] ) {
 
 function compile( contract, name ) {
 
-    var interfaceFileName = name + "-contract-abi";
-    var contractFileName = name + "-contract";
+    var interfaceFileName = BUILD_NAME + name + "-contract-abi";
+    var contractFileName = BUILD_NAME + name + "-contract";
 
     var interfaceFile = __dirname + "/../build/" + interfaceFileName + ".json";
     var interfaceHistoryFile = __dirname + "/../build/history/" + interfaceFileName + Date.now() + ".json";

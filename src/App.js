@@ -11,6 +11,8 @@ var HTTPResponse = require( "./HTTPResponse.js" );
 
 var Midi = require( "./Midi.js" );
 
+var Networks = require( "./EthNetworks.js" );
+
 var Config = require( "./Config.js" );
 
 
@@ -59,11 +61,23 @@ function renderContent() {
 
     var contract = SheetMusic.instance;
 
+    var stats = SheetMusic.instance.getDonationStats();
+
+    var web = SheetMusic.getWeb();
+
+    stats = {
+        goal: web.fromWei( stats[ 0 ].toNumber(), "ether" ),
+        min: web.fromWei( stats[ 1 ].toNumber(), "ether" ),
+        current: parseFloat( web.fromWei( stats[ 2 ].toNumber(), "ether" ) )
+    };
+
     var vars = {
         abi: JSON.stringify( contract.abi ),
         contract: contract,
         Midi: Midi,
-        notes: SheetMusic.loadedNotes
+        Networks: Networks,
+        notes: SheetMusic.loadedNotes,
+        globalStats: stats
     };
 
     HTML_CONTENT = Templater.getTemplate( "main.html", vars );

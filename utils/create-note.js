@@ -5,6 +5,8 @@
 
 var Contract = require( "../src/Contract.js" );
 
+var RandomNote = require( "./lib/random-note.js" );
+
 var SheetMusic = new Contract;
 
 var web = SheetMusic.getWeb();
@@ -17,7 +19,9 @@ var trans = {
     gas: 3000000
 };
 
-creator.createNote( 75, 4, trans, function( err, game ) {
+var note = RandomNote();
+
+creator.createNote( note[ 0 ], note[ 1 ], trans, function( err, game ) {
 
     if( err ) {
 

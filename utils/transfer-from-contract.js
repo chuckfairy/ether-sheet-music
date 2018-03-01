@@ -27,7 +27,7 @@ function transfer() {
 
     }
 
-    creator.transfer( address, function( err, result ) {
+    creator.transferAll( address, function( err, result ) {
 
         console.log( err, result );
 

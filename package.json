@@ -4,7 +4,9 @@
     "description": "Ether Sheet Music",
     "main": "./src/App.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build": "./bin/build.js",
+        "run": "./bin/startup.sh",
+        "test": "mocha"
     },
     "author": "chuckfairy",
     "license": "MIT",
