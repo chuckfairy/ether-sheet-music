@@ -22,7 +22,7 @@ EM.Shim = {
 
     fromWei: function( val ) {
 
-        return typeof( web3 ) !== "undefined"
+        return HAS_WEB3
             ? web3.fromWei( val, "ether" )
             : parseInt( val ) * 0.000000000000000001;
 

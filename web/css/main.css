@@ -65,7 +65,7 @@ body {
     position: absolute;
     z-index: 5;
     right: -12px;
-    top: 23px;
+    top: 1.45em;
     border-radius: 2px 2px 0 0;
 }
 
@@ -101,6 +101,27 @@ body {
  * Create note tab
  */
 
+#create-note-form {
+    position: relative;
+}
+
+#create-form-disabled {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    padding: 0;
+}
+
+#create-form-disabled > p {
+    position: absolute;
+    top: 40%;
+    width: 100%;
+    text-align: center;
+}
+
 #create-note-form > .row {
     margin-bottom: 10px;
 }
@@ -122,4 +143,23 @@ body {
 
 .composer-data p {
     margin: 0;
+}
+
+
+/**
+ * Media queries
+ */
+
+@media (max-width: 500px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    .nav-item {
+        font-size: .7em;
+    }
+
+    .nav-item::after {
+        top: 1.4em;
+    }
 }

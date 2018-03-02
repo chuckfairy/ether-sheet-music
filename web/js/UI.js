@@ -77,8 +77,8 @@ EM.UI.prototype = {
 
         scope.templater.compile( function() {
 
-            scope.setupComposerStats();
             scope.setupStats();
+            scope.setupComposerStats();
 
         });
 
@@ -112,7 +112,16 @@ EM.UI.prototype = {
     setupAddressHeader: function() {
 
         var header = document.getElementById( "address-section" );
-        header.innerHTML = web3.eth.defaultAccount;
+
+        if( HAS_WEB3 ) {
+
+            header.innerHTML = web3.eth.defaultAccount;
+
+        } else {
+
+            header.innerHTML = "Web3 Not Found";
+
+        }
 
     },
 
@@ -170,6 +179,15 @@ EM.UI.prototype = {
     setupCreateForm: function() {
 
         var scope = this;
+
+        if( ! HAS_WEB3 ) { return; }
+
+
+        //Remove disable
+
+        var disabledDiv = document.getElementById( "create-form-disabled" );
+        disabledDiv.style.display = "none";
+
 
         //Create form
 
@@ -324,7 +342,8 @@ EM.UI.prototype = {
 
         });
 
-        var percentRaised = Math.ceil( ( current / goal ) * 100 );
+        var percentRaised = Math.ceil( ( current / goal ) * 10000 );
+        percentRaised = percentRaised * .01;
         var donationRaisedDiv = document.getElementById( "donation-top-raised" );
         donationRaisedDiv.innerHTML = percentRaised + "% Raised";
 

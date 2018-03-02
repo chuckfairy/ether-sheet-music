@@ -28,7 +28,7 @@ window.addEventListener( "load", function() {
 
     if( typeof( Web3 ) === "undefined" && typeof( web3 ) === "undefined" ) {
 
-        alert( "Meta Mask not installed, please install at http://metamask.io" );
+        alert( "MetaMask or Web3 enabled browser not installed, please install at http://metamask.io" );
 
         return init();
 
@@ -47,7 +47,7 @@ window.addEventListener( "load", function() {
 
         if( err || ! accounts || ! accounts.length ) {
 
-            return alert( "Please login to Metamask and connect to ropsten test net" );
+            return alert( "Please login to MetaMask and connect to ropsten test net" );
 
         }
 
