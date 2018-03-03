@@ -1,3 +1,4 @@
 #!/bin/bash
 
-node ./src/App.js
+dir=$( dirname $0 )
+node $dir/../src/App.js
