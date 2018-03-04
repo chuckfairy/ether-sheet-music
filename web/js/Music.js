@@ -1,5 +1,8 @@
 /**
  * Music contract helper
+ *
+ * @requires [ Web3 ]
+ *
  */
 "use strict";
 
@@ -193,7 +196,6 @@ EM.Music = function() {
             var donation = parseFloat( web3.fromWei( note.donation.toNumber(), "ether" ) );
 
             scope.globalStats.current += donation;
-            console.log( scope.globalStats.current, donation );
 
             scope.dispatch({
                 type: "note-created",
@@ -277,20 +279,7 @@ EM.Music = function() {
 
         }
 
-
-        //Dotted sixteenth remains to be found
-        //Use a tying system
-
-        if( length === 7 ) {
-
-            abc = "(" + abc + Midi.ABC.NoteLength[ 8 ]
-                + " " + abc + "/4)";
-
-        } else {
-
-            abc = abc + lengthABC;
-
-        }
+        abc = abc + lengthABC;
 
         return abc;
 

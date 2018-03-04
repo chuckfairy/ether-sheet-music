@@ -29,6 +29,7 @@
             <select name="note" class="form-control" id="note-midi" required>
 
                 <option value="">Pick a Note!</option>
+                <option value="random">Random (why not?)</option>
 
                 {% for note, data in Midi.NoteNumber %}
 
@@ -53,6 +54,7 @@
             <select name="note-length" class="form-control" id="note-length" required>
 
                 <option value="">Pick a Length!</option>
+                <option value="random">Random (why not?)</option>
 
                 {% for length, name in Midi.NoteLength %}
 

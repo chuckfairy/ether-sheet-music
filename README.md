@@ -4,13 +4,20 @@
 # Install
 
 - `npm install`
+- `./bin/build.js` Build contract
+- `./bin/startup.sh` startup node web server
+
+
+# Config
+
+- basic config for default values in `./config/config.json`
 
 
 ## Eth Private Network
 
 Install the GUI app http://truffleframework.com/ganache/. When the app is started...
 
-- Settings > Server > Port Number. Set this to `8545`. You'll only need to do this once.
+- Settings > Server > Port Number. Set this to `8545` or whatever you have set in the `config.json`. You'll only need to do this once.
 - Make sure you are automining
 - Within the app it's going to give you a number of accounts with tons of ETH. Import one of these into metamask via the private key.
 - If you ever restart Ganache. Under settings in metamask. Click `Reset Account`. Nothing will work without this.
@@ -24,7 +31,7 @@ Install the GUI app http://truffleframework.com/ganache/. When the app is starte
 ## Running Web Server
 
 - `./bin/startup.sh` or `node ./src/App.js`.
-- http://localhost:9090
+- http://localhost:9090 will be default on `config.json`
 - As it will stated in design. If you change the server `/templates/` rerun the server.
 
 
@@ -41,25 +48,24 @@ Install the GUI app http://truffleframework.com/ganache/. When the app is starte
 - To get a notes in design run `node ./utils/create-note.js` or `node ./utils/create-mass-notes.js`
 
 
+# Testing
+
+Run
+
+- `npm install -g mocha`
+- `mocha`
+
+
 # Links
 
 - https://github.com/paulrosen/abcjs
 
 
-# Testing
-
-Run
-
-`npm install -g mocha`
-`mocha`
-
-
 # TODO
 
-- Account for Devs
-- Midi download fix
+- Midi download fix, problem exists in abcjs
 
 
 ## Maybes
-- Random note selection
-- Composer name add. might need external DB (mysql), but really don't want to do that
+
+- Composer name add. might need external DB, but really don't want to do that

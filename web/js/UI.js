@@ -1,7 +1,7 @@
 /**
  * UI setup
  *
- * @requires [ Templater, async ]
+ * @requires [ Templater, async, ABCJS, EM.Music ]
  *
  */
 "use strict";
@@ -220,6 +220,9 @@ EM.UI.prototype = {
 
         function updateCreatorView() {
 
+            checkRandom( noteNumber );
+            checkRandom( noteLength );
+
             if( noteNumber.value === "" || noteLength.value === "" ) {
 
                 creatorView.innerHTML = "";
@@ -232,10 +235,26 @@ EM.UI.prototype = {
                 noteLength.value|0
             );
 
-            var abc = "L: 1/8\n" +
+            var abc = "L: 1/32\n" +
                 ":" + note;
 
             ABCJS.renderAbc( creatorView, abc );
+
+        }
+
+        function checkRandom( input ) {
+
+            if( input.value !== "random" ) {
+
+                return;
+
+            }
+
+            var opts = input.options.length - 2;
+
+            var index = Math.floor( ( Math.random() * opts ) + 2 );
+
+            input.selectedIndex = index;
 
         }
 
