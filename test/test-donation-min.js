@@ -24,7 +24,7 @@ describe("Donation Min", function() {
 
         this.timeout( 6000 );
 
-        var startingNotes = Instance.getNumberOfNotes();
+        var startingNotes = Instance.getNumberOfBeats();
         startingNotes = startingNotes.toNumber();
 
         var trans = {
@@ -33,12 +33,12 @@ describe("Donation Min", function() {
             gas: 3000000
         };
 
-        Instance.createNote( 25, 1, trans, function( err, result ) {
+        Instance.createBeat( [ 25 ], 1, trans, function( err, result ) {
 
             //Value will still be transfered no way around
             //Check if no note was created
 
-            assert.equal( Instance.getNumberOfNotes(), startingNotes );
+            assert.equal( Instance.getNumberOfBeats(), startingNotes );
 
             done();
 
@@ -50,7 +50,7 @@ describe("Donation Min", function() {
 
         this.timeout( 6000 );
 
-        var startingNotes = Instance.getNumberOfNotes();
+        var startingNotes = Instance.getNumberOfBeats();
         startingNotes = startingNotes.toNumber();
 
         var trans = {
@@ -59,12 +59,12 @@ describe("Donation Min", function() {
             gas: 3000000
         };
 
-        Instance.createNote( 25, 1, trans, function( err, result ) {
+        Instance.createBeat( [ 25, 50 ], 1, trans, function( err, result ) {
 
             //Value will still be transfered no way around
             //Check if no note was created
 
-            assert.equal( Instance.getNumberOfNotes(), startingNotes + 1 );
+            assert.equal( Instance.getNumberOfBeats(), startingNotes + 1 );
 
             done();
 

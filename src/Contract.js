@@ -85,7 +85,7 @@ Contract.prototype = {
 
         var scope = this;
 
-        var numNotes = scope.instance.getNumberOfNotes().toNumber();
+        var numNotes = scope.instance.getNumberOfBeats().toNumber();
 
         console.log( "Number of notes " +numNotes );
 
@@ -100,7 +100,7 @@ Contract.prototype = {
 
         Async.map( numArray, function( item, itemCallback ) {
 
-            var note = scope.instance.getNote( item );
+            var note = scope.instance.getBeat( item );
 
             scope.loadedNotes[ item ] = note;
 
@@ -135,7 +135,7 @@ Contract.prototype = {
 
             }
 
-            var note = scope.instance.getNote( noteId );
+            var note = scope.instance.getBeat( noteId );
 
             console.log( note );
 

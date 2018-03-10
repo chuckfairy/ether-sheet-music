@@ -122,7 +122,24 @@ body {
     text-align: center;
 }
 
-#create-note-form > .row {
+#note-picker-area {
+    margin-bottom: 10px;
+}
+
+.note-picker-beat {
+    padding: 10px;
+    border: 1px solid #AAA;
+    margin-bottom: 10px;
+}
+
+.note-picker-note {
+    border-left: 5px solid #4444FF;
+    padding: 10px;
+    background: #EEE;
+    margin-bottom: 10px;
+}
+
+#create-note-form .row {
     margin-bottom: 10px;
 }
 

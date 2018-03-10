@@ -124,7 +124,7 @@ EM.Music = function() {
 
             async.eachSeries( new Array( numNotes ), function( item, itemCallback ) {
 
-                scope.getNote( id, function( composer ) {
+                scope.getBeat( id, function( composer ) {
 
                     stats.push( composer );
 
@@ -149,7 +149,7 @@ EM.Music = function() {
      * Main get note
      */
 
-    scope.getNote = function( noteId, callback ) {
+    scope.getBeat = function( noteId, callback ) {
 
         if( scope.notesLoaded[ noteId ] ) {
 
@@ -157,7 +157,7 @@ EM.Music = function() {
 
         }
 
-        instance.getNote( noteId, function( err, note ) {
+        instance.getBeat( noteId, function( err, note ) {
 
             var noteData = scope.formatNote( noteId, note );
 
@@ -217,19 +217,16 @@ EM.Music = function() {
 
     scope.formatNote = function( noteId, note ) {
 
-        var midi = note[ 1 ] | 0;
+        var midi = note[ 1 ];
         var length = note[ 2 ] | 0;
 
-        var midiData = Midi.NoteNumber[ midi ] || {};
-
-        var midiABC = scope.convertMidiToABC( midiData.midi, length );
+        var midiABC = scope.convertMidiToABC( midi, length );
         var lengthABC = Midi.ABC.NoteLength[ length ];
 
         var noteData = {
             id: noteId,
             maker: note[ 0 ],
             midi: midi,
-            midiData: midiData,
             abc: {
                 note: midiABC,
             },
@@ -247,14 +244,46 @@ EM.Music = function() {
      * Conversion to midi / sheet music plugins
      */
 
-    scope.convertMidiToABC = function( midiName, length ) {
+    scope.convertMidiToABC = function( midiNotes, length ) {
+
+        var abc = scope.convertMidisToABCChord( midiNotes );
+
+        var lengthABC = Midi.ABC.NoteLength[ length ];
+
+        abc = abc + lengthABC;
+
+        return abc;
+
+    };
+
+    scope.convertMidisToABCChord = function( midiNotes ) {
+
+        var out = [];
+
+        var ml = midiNotes.length;
+
+        for( var i = 0; i < ml; ++ i ) {
+
+            var note = midiNotes[ i ];
+
+            var abc = scope.convertMidiToABCNote( note );
+
+            out.push( abc );
+
+        }
+
+        return "[" + out.join( "" ) + "]";
+
+    }
+
+    scope.convertMidiToABCNote = function( midi ) {
+
+        var midiName = Midi.NoteNumber[ midi ];
+        midiName = midiName.midi;
 
         var abc = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
         var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
         var sharp = midiName.indexOf( "#" ) !== -1;
-
-        var lengthABC = Midi.ABC.NoteLength[ length ];
-
 
         //Uppercase if over middle 4
         var lowerCase = midiNumber > 4;
@@ -279,11 +308,9 @@ EM.Music = function() {
 
         }
 
-        abc = abc + lengthABC;
-
         return abc;
 
-    };
+    }
 
 
     /**

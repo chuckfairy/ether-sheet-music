@@ -69,7 +69,7 @@ EM.UI.prototype = {
 
         scope.createForm = document.getElementById( scope.createFormId );
 
-        scope.setupCreateForm();
+        setTimeout( function() { scope.setupCreateForm(); }, 50 );
 
         scope.templater = new Templater({
             templates: scope.templates
@@ -231,7 +231,7 @@ EM.UI.prototype = {
             }
 
             var note = scope.Music.convertMidiToABC(
-                Midi.NoteNumber[ noteNumber.value|0 ].midi,
+                [ noteNumber.value ],
                 noteLength.value|0
             );
 
@@ -279,7 +279,7 @@ EM.UI.prototype = {
 
         }
 
-        scope.Music.getNote( id, function( note ) {
+        scope.Music.getBeat( id, function( note ) {
 
             scope.renderComposerNotes( [ note ] );
 

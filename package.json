@@ -11,12 +11,12 @@
     "author": "chuckfairy",
     "license": "MIT",
     "dependencies": {
-        "web3": "*",
+        "async": "*",
         "node-static": "*",
-        "solc": "*",
-        "nunjucks": "*",
-        "winston": "*",
-        "async": "*"
+        "nunjucks": "^3.1.2",
+        "solc": "^0.4.21",
+        "web3": "*",
+        "winston": "^2.4.1"
     },
     "devDependencies": {
         "chai": "*"

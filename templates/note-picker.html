@@ -1,0 +1,70 @@
+<div id="note-picker-area">
+
+    <div class="note-picker-beat">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <p>Note(s) Length</p>
+            </div>
+
+            <div class="col-md-9">
+
+                <select name="note-length" class="form-control" id="note-length" required>
+
+                    <option value="">Pick a Length!</option>
+                    <option value="random">Random (why not?)</option>
+
+                    {% for length, name in Midi.NoteLength %}
+
+                    <option value="{{ length }}">{{ name }}</option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+        <div class="note-picker-note">
+
+
+            <div class="row">
+
+                <div class="col-md-3">
+                    <p>Note</p>
+                </div>
+
+                <div class="col-md-9">
+
+                    <select name="note" class="form-control" id="note-midi" required>
+
+                        <option value="">Pick a Note!</option>
+                        <option value="random">Random (why not?)</option>
+
+                        {% for note, data in Midi.NoteNumber %}
+
+                        <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-info" data-id="note-picker-add-note">+ Add a Note to the Chord</button>
+
+    </div>
+
+    <hr>
+
+    <button type="submit" class="btn btn-info" id="note-picker-add-beat">Add a Beat</button>
+
+    <hr>
+
+</div>

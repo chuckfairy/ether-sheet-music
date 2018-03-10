@@ -1,5 +1,7 @@
 <h2>Create A Note</h2>
 
+<p class="alert alert-info">* Donation minimum is per beat not per note</p>
+
 <form id="create-note-form">
 
     <div id="create-form-disabled" class="alert alert-danger">
@@ -18,55 +20,7 @@
 
     </div>
 
-    <div class="row">
-
-        <div class="col-md-3">
-            <p>Note</p>
-        </div>
-
-        <div class="col-md-9">
-
-            <select name="note" class="form-control" id="note-midi" required>
-
-                <option value="">Pick a Note!</option>
-                <option value="random">Random (why not?)</option>
-
-                {% for note, data in Midi.NoteNumber %}
-
-                <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
-
-                {% endfor %}
-
-            </select>
-
-        </div>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <p>Note Length</p>
-        </div>
-
-        <div class="col-md-9">
-
-            <select name="note-length" class="form-control" id="note-length" required>
-
-                <option value="">Pick a Length!</option>
-                <option value="random">Random (why not?)</option>
-
-                {% for length, name in Midi.NoteLength %}
-
-                <option value="{{ length }}">{{ name }}</option>
-
-                {% endfor %}
-
-            </select>
-
-        </div>
-
-    </div>
+    {% include "note-picker.html" %}
 
     <div class="row">
 
@@ -78,7 +32,7 @@
 
             <div id="music-note-created" class="alert alert-success"></div>
 
-            <button type="submit" class="btn btn-success btn-block">Create Note</button>
+            <button type="submit" class="btn btn-success btn-block">Create Your Donation</button>
         </div>
 
     </div>
