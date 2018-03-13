@@ -31,4 +31,3 @@ var Templater = {
 };
 
 module.exports = Templater;
-

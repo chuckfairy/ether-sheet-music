@@ -1,6 +1,6 @@
 <div id="note-picker-area">
 
-    <div class="note-picker-beat">
+    <div class="note-picker-beat" id="note-picker-beat">
 
         <div class="row">
 
@@ -27,29 +27,32 @@
 
         </div>
 
-        <div class="note-picker-note">
+        <div class="note-picker-note-area">
 
+            <div class="note-picker-note" id="note-picker-note">
 
-            <div class="row">
+                <div class="row">
 
-                <div class="col-md-3">
-                    <p>Note</p>
-                </div>
+                    <div class="col-md-3">
+                        <p>Note</p>
+                    </div>
 
-                <div class="col-md-9">
+                    <div class="col-md-9">
 
-                    <select name="note" class="form-control" id="note-midi" required>
+                        <select name="note" class="form-control" id="note-midi" required>
 
-                        <option value="">Pick a Note!</option>
-                        <option value="random">Random (why not?)</option>
+                            <option value="">Pick a Note!</option>
+                            <option value="random">Random (why not?)</option>
 
-                        {% for note, data in Midi.NoteNumber %}
+                            {% for note, data in Midi.NoteNumber %}
 
-                        <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
+                            <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
 
-                        {% endfor %}
+                            {% endfor %}
 
-                    </select>
+                        </select>
+
+                    </div>
 
                 </div>
 
@@ -57,14 +60,14 @@
 
         </div>
 
-        <button type="submit" class="btn btn-info" data-id="note-picker-add-note">+ Add a Note to the Chord</button>
+        <button type="button" class="btn btn-info note-picker-add-note">+ Add a Note to the Chord</button>
 
     </div>
 
-    <hr>
-
-    <button type="submit" class="btn btn-info" id="note-picker-add-beat">Add a Beat</button>
-
-    <hr>
-
 </div>
+
+<hr>
+
+<button type="button" class="btn btn-info" id="note-picker-add-beat">Add a Beat</button>
+
+<hr>

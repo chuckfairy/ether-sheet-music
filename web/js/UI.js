@@ -12,6 +12,9 @@ EM.UI = function( music ) {
 
     scope.Music = music;
 
+    scope.NotePicker = new EM.NotePicker();
+    scope.currentEditor = scope.NotePicker;
+
     scope.init();
 
 };
@@ -23,6 +26,9 @@ EM.UI.prototype = {
      */
 
     Music: null,
+    NotePicker: null,
+
+    currentEditor: null,
 
     templater: null,
 
@@ -192,8 +198,6 @@ EM.UI.prototype = {
         //Create form
 
         var donation = document.getElementById( "donation" );
-        var noteNumber = document.getElementById( "note-midi" );
-        var noteLength = document.getElementById( "note-length" );
 
         var creatorView = document.getElementById( "note-creator-view" );
 
@@ -204,26 +208,27 @@ EM.UI.prototype = {
 
             e.preventDefault();
 
+            var args = scope.currentEditor.getArgs();
+
+
             //Launch contract call
 
             scope.Music.createNote(
                 donation.value,
-                noteNumber.value,
-                noteLength.value
+                args[ 0 ],
+                args[ 1 ],
+                args[ 2 ]
             );
 
         };
 
-        noteNumber.onchange = updateCreatorView;
-        noteLength.onchange = updateCreatorView;
         updateCreatorView();
 
         function updateCreatorView() {
 
-            checkRandom( noteNumber );
-            checkRandom( noteLength );
+            var beats = scope.currentEditor.getABC();
 
-            if( noteNumber.value === "" || noteLength.value === "" ) {
+            if( beats[ 0 ].notes.length === 0 ) {
 
                 creatorView.innerHTML = "";
                 return;
@@ -257,6 +262,21 @@ EM.UI.prototype = {
             input.selectedIndex = index;
 
         }
+
+
+        //Events
+
+        scope.NotePicker.on( "change", updateCreatorView );
+
+    },
+
+
+    /**
+     * Creator view render
+     */
+
+    updateCreatorView: function() {
+
 
     },
 

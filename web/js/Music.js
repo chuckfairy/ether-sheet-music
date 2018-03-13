@@ -114,7 +114,7 @@ EM.Music = function() {
 
     scope.getComposerStats = function( callback ) {
 
-        instance.getNumberOfNotes( function( err, numNotes ) {
+        instance.getNumberOfBeats( function( err, numNotes ) {
 
             var id = 1;
 
