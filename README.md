@@ -63,8 +63,9 @@ Run
 
 # TODO
 
-- Sequencer
 - Contract onlyOwner allow change of minimum and milestone goal to future proof
+- Multi network configuration
+- Dynamic donation per beat
 - Midi download fix, problem exists in abcjs for linux
 
 ## Maybes

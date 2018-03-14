@@ -43,25 +43,31 @@
 
         </div>
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <div id="main-nav">
 
-            <li class="nav-item">
-                <a class="nav-link active" id="music-view-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
-            </li>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-            <li class="nav-item">
-                <a class="nav-link" id="music-create-tab" data-toggle="tab" href="#music-create" role="tab">Create</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="music-view-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
+                </li>
 
-            <li class="nav-item">
-                <a class="nav-link" id="games-completed-tab" data-toggle="tab" href="#music-stats" role="tab">Stats</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="music-create-tab" data-toggle="tab" href="#music-create" role="tab">Create</a>
+                </li>
 
-            <li class="nav-item">
-                <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab">About</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="games-completed-tab" data-toggle="tab" href="#music-stats" role="tab">Stats</a>
+                </li>
 
-        </ul>
+                <li class="nav-item">
+                    <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab">About</a>
+                </li>
+
+            </ul>
+
+            <div class="nav-bottom rainbow-gradient"></div>
+
+        </div>
 
         <div class="tab-content" id="myTabContent">
 
@@ -185,7 +191,9 @@ var HAS_WEB3 = typeof( web3 ) !== "undefined";
         <script src="./js/Shim.js"></script>
         <script src="./js/Music.js"></script>
 
+        <script src="./js/EditorHelper.js"></script>
         <script src="./js/NotePicker.js"></script>
+        <script src="./js/Sequencer.js"></script>
         <script src="./js/UI.js"></script>
 
         <script src="./js/Main.js"></script>

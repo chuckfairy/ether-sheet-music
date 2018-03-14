@@ -12,6 +12,15 @@ i, button {
     cursor: pointer;
 }
 
+.rainbow-gradient {
+    height: 200px;
+    background: red;
+    background: -webkit-linear-gradient(left, red, orange , yellow, green, cyan, blue, violet);
+    background: -o-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
+    background: -moz-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
+    background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet);
+}
+
 
 /**
  * Donation top
@@ -53,14 +62,14 @@ i, button {
  * Nav
  */
 
-.nav-item {
+#main-nav .nav-item {
     border-radius: 2px 2px 0 0;
     border: 1px solid #000;
     margin-right: 2px;
     position: relative;
 }
 
-.nav-item::after {
+#main-nav .nav-item::after {
     width: 20px;
     height: 50px;
     display: block;
@@ -73,8 +82,14 @@ i, button {
     border-radius: 2px 2px 0 0;
 }
 
-.nav-item > a {
+#main-nav .nav-item > a {
     padding-top: 38px;
+}
+
+#main-nav .nav-bottom {
+    height: 10px;
+    width: 100%;
+    border-radius: 0 5px 5px 5px;
 }
 
 
@@ -150,6 +165,41 @@ i, button {
 
 #music-changed-alert, #music-note-created {
     display: none;
+}
+
+
+/**
+ * Sequencer UI
+ */
+
+#sequencer-area {
+    padding: 10px 0;
+}
+
+.sequencer-beat {
+    width: 10em;
+    float: left;
+    margin-right: 10px;
+}
+
+.sequencer-notes {
+    overflow-y: scroll;
+    height: 18em;
+}
+
+.sequencer-note, .sequencer-note-active {
+    padding: 10px;
+    width: 120px;
+    cursor: pointer;
+}
+
+.sequencer-note-active {
+    background: #000 !important;
+    color: #FFF !important;
+}
+
+.sequencer-note:hover, .sequencer-note-active:hover {
+    background: #AAA !important;
 }
 
 

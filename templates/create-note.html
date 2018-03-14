@@ -1,6 +1,4 @@
-<h2>Create A Note</h2>
-
-<p>Write what your heart desires</p>
+<p><i><b>Write what your heart desires</b></i></p>
 
 <form id="create-note-form">
 
@@ -20,11 +18,35 @@
 
     </div>
 
-    {% include "note-picker.html" %}
+    <ul class="nav nav-tabs" id="creator-tabs" role="tablist">
+
+        <li class="nav-item">
+            <a class="nav-link active" id="note-picker-tab" data-toggle="tab" href="#note-picker-content" role="tab">Note Picker</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="sequencer-tab" data-toggle="tab" href="#sequencer-content" role="tab">Sequencer</a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane fade show active" id="note-picker-content">
+            {% include "note-picker.html" %}
+        </div>
+
+        <div class="tab-pane fade" id="sequencer-content">
+            {% include "sequencer.html" %}
+        </div>
+
+    </div>
 
     <div class="row">
 
         <div class="col-md-12">
+
+            <h2>Hearing is Believing</h2>
 
             <div id="note-creator-listen"></div>
 

@@ -33,8 +33,6 @@ EM.NotePicker.prototype = {
 
     beats: [],
 
-    noteLengthInputs: [],
-
 
     /**
      * Main
@@ -130,6 +128,8 @@ EM.NotePicker.prototype = {
 
             input.onchange = function() {
 
+                EM.EditorHelper.checkRandom( input );
+
                 scope.dispatch({ type: "change" });
 
             };
@@ -180,8 +180,6 @@ EM.NotePicker.prototype = {
         for( var i = 0; i < il; ++ i ) {
 
             var input = inputs[ i ];
-
-            scope.checkRandom( input );
 
             if( input.value === "" ) { continue; }
 
@@ -234,54 +232,20 @@ EM.NotePicker.prototype = {
 
         var scope = this;
 
-        var midi = [];
-        var dividers = [];
-        var lengths = [];
-
-        var beats = scope.getABC();
-        var bl = beats.length;
-
-        var lastDivide = 0;
-
-        for( var i = 0; i < bl; ++ i ) {
-
-            var beat = beats[ i ];
-
-            midi = midi.concat( beat.notes );
-
-            dividers.push( lastDivide + beat.notes.length );
-            lengths.push( beat.length );
-
-            lastDivide += beat.notes.length;
-
-        }
-
-        return [
-            midi,
-            dividers,
-            lengths
-        ];
+        return EM.EditorHelper.getArgs( scope.getABC() );
 
     },
 
 
     /**
-     * Random select item
+     * Inputs required changer
      */
 
-    checkRandom: function( input ) {
+    setRequired: function( required ) {
 
-        if( input.value !== "random" ) {
+        var scope = this;
 
-            return;
-
-        }
-
-        var opts = input.options.length - 2;
-
-        var index = Math.floor( ( Math.random() * opts ) + 2 );
-
-        input.selectedIndex = index;
+        EM.EditorHelper.setRequired( scope.area, required );
 
     }
 

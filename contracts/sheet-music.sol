@@ -420,6 +420,19 @@ contract SheetMusic is OwnableContract {
 
 
     /**
+     * Owner setters for future proofing
+     */
+
+    function setMinDonation( uint newMin ) onlyOwner external {
+
+    }
+
+    function setMilestone( uint newMile ) onlyOwner external {
+
+    }
+
+
+    /**
      * Array splice function
      */
 

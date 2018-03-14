@@ -13,6 +13,14 @@ EM.UI = function( music ) {
     scope.Music = music;
 
     scope.NotePicker = new EM.NotePicker();
+    scope.Sequencer = new EM.Sequencer();
+
+    scope.NotePicker.setRequired( true );
+    scope.Sequencer.setRequired( false );
+
+
+    //Default to note picker
+
     scope.currentEditor = scope.NotePicker;
 
     scope.init();
@@ -27,6 +35,7 @@ EM.UI.prototype = {
 
     Music: null,
     NotePicker: null,
+    Sequencer: null,
 
     currentEditor: null,
 
@@ -189,6 +198,11 @@ EM.UI.prototype = {
         if( ! HAS_WEB3 ) { return; }
 
 
+        //Editor change
+
+        scope.setEditorChangeEvents();
+
+
         //Remove disable
 
         var disabledDiv = document.getElementById( "create-form-disabled" );
@@ -198,9 +212,6 @@ EM.UI.prototype = {
         //Create form
 
         var donation = document.getElementById( "donation" );
-
-        var creatorView = document.getElementById( "note-creator-view" );
-        var listenView = document.getElementById( "note-creator-listen" );
 
 
         //Main submit
@@ -227,27 +238,51 @@ EM.UI.prototype = {
 
         function updateCreatorView() {
 
-            var beats = scope.currentEditor.getABC();
-
-            if( beats[ 0 ].notes.length === 0 ) {
-
-                creatorView.innerHTML = "";
-                return;
-
-            }
-
-            var abc = scope.Music.convertArrayToABC( beats );
-            abc = "L: 1/32\n" +
-                ":" + abc;
-
-            ABCJS.renderMidi( listenView, abc );
-            ABCJS.renderAbc( creatorView, abc );
+            scope.updateCreatorView();
 
         }
 
         //Events
 
         scope.NotePicker.on( "change", updateCreatorView );
+        scope.Sequencer.on( "change", updateCreatorView );
+
+    },
+
+
+
+    /**
+     * Current editor change
+     */
+
+    setEditorChangeEvents: function() {
+
+        var scope = this;
+
+        var notePickerBtn = document.getElementById( "note-picker-tab" );
+        var sequencerBtn = document.getElementById( "sequencer-tab" );
+
+        notePickerBtn.addEventListener( "click", function() {
+
+            scope.currentEditor = scope.NotePicker;
+
+            scope.NotePicker.setRequired( true );
+            scope.Sequencer.setRequired( false );
+
+            scope.updateCreatorView();
+
+        });
+
+        sequencerBtn.addEventListener( "click", function() {
+
+            scope.currentEditor = scope.Sequencer;
+
+            scope.Sequencer.setRequired( true );
+            scope.NotePicker.setRequired( false );
+
+            scope.updateCreatorView();
+
+        });
 
     },
 
@@ -258,6 +293,29 @@ EM.UI.prototype = {
 
     updateCreatorView: function() {
 
+        var scope = this;
+
+        var creatorView = document.getElementById( "note-creator-view" );
+        var listenView = document.getElementById( "note-creator-listen" );
+
+        var beats = scope.currentEditor.getABC();
+
+        if( ! beats || beats[ 0 ].notes.length === 0 ) {
+
+            creatorView.innerHTML = "";
+            return;
+
+        }
+
+        var abc = scope.Music.convertArrayToABC( beats );
+        abc = "L: 1/32\n" +
+            ":" + abc;
+
+        ABCJS.renderAbc( creatorView, abc );
+        var midiRender = ABCJS.renderMidi( listenView, abc );
+
+        var playBtn = listenView.getElementsByClassName( "abcjs-midi-start" );
+        setTimeout( function() { playBtn[ 0 ].click() }, 25 );
 
     },
 
@@ -324,7 +382,8 @@ EM.UI.prototype = {
 
         var scope = this;
 
-        scope.createForm.reset();
+        var donation = document.getElementById( "donation" );
+        donation.value = "";
 
         scope.setMessage( "You created a note!" );
 
