@@ -216,11 +216,16 @@ contract SheetMusic is OwnableContract {
         uint userNumberBeats = userDivider.length;
         uint userNumberLength = lengths.length;
 
+
         //Check note min value and lengths equal eachother
+        //Check valid midi notes
 
         require( userNumberBeats == userNumberLength );
 
         require( msg.value >= ( MINIMUM_DONATION * userNumberBeats ) );
+
+        checkMidiNotesValue( userNotes );
+
 
         //Create beats
 
@@ -229,12 +234,10 @@ contract SheetMusic is OwnableContract {
 
         for( uint i = 0; i < userNumberBeats; ++ i ) {
 
-            uint divide = userNotes[ i ];
+            uint divide = userDivider[ i ];
             NoteLength length = lengths[ i ];
 
-            uint8[] memory midiNotes = spliceMidiNotes( userNotes, lastDivider, divide );
-
-            checkMidiNotesValue( midiNotes );
+            uint8[] memory midiNotes = splice( userNotes, lastDivider, divide );
 
             Beat memory newBeat = Beat({
                 maker: msg.sender,
@@ -346,13 +349,17 @@ contract SheetMusic is OwnableContract {
     function getDonationStats() external view returns (
         uint goal,
         uint minimum,
-        uint currentValue
+        uint currentValue,
+        uint milestoneAmount,
+        address donateeAddr
     ) {
 
         return (
             DONATION_GOAL,
             MINIMUM_DONATION,
-            totalValue
+            totalValue,
+            MILESTONE_GOAL,
+            donatee
         );
 
     }
@@ -360,6 +367,12 @@ contract SheetMusic is OwnableContract {
     function getTotalDonated() external view returns( uint ) {
 
         return totalValue;
+
+    }
+
+    function getDonatee() public constant returns( address ) {
+
+        return donatee;
 
     }
 
@@ -405,7 +418,12 @@ contract SheetMusic is OwnableContract {
 
     }
 
-    function spliceMidiNotes( uint8[] arr, uint index, uint to )
+
+    /**
+     * Array splice function
+     */
+
+    function splice( uint8[] arr, uint index, uint to )
         pure
         internal
         returns( uint8[] )

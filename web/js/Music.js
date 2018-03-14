@@ -23,13 +23,13 @@ EM.Music = function() {
      * Main note creator
      */
 
-    scope.createNote = function( donation, note, noteLength ) {
+    scope.createBeat = function( donation, notes, dividers, noteLengths ) {
 
         var trans = {
             value: web3.toWei( donation, "ether" )
         };
 
-        instance.createNote( note, noteLength, trans, function( err, response ) {
+        function callback( err, response ) {
 
             if( err ) {
 
@@ -42,7 +42,17 @@ EM.Music = function() {
                 data: response
             });
 
-        });
+        }
+
+        if( dividers.length === 1 ) {
+
+            instance.createBeat( notes, noteLengths[ 0 ], trans, callback );
+
+        } else {
+
+            instance.createPassage( notes, dividers, noteLengths, trans, callback );
+
+        }
 
     }
 
@@ -239,7 +249,6 @@ EM.Music = function() {
 
     };
 
-
     /**
      * Conversion to midi / sheet music plugins
      */
@@ -310,7 +319,30 @@ EM.Music = function() {
 
         return abc;
 
-    }
+    };
+
+
+    /**
+     * Convert array to ABC
+     */
+
+    scope.convertArrayToABC = function( arr ) {
+
+        var al = arr.length;
+
+        var output = "";
+
+        for( var i = 0; i < al; ++ i ) {
+
+            var beat = arr[ i ];
+
+            output += scope.convertMidiToABC( beat.notes, beat.length );
+
+        }
+
+        return output;
+
+    };
 
 
     /**
@@ -346,6 +378,11 @@ EM.Music = function() {
         return "";
 
     };
+
+
+    /**
+     * etherscan url grabber
+     */
 
     scope.getTransactionUrl = function( txHash ) {
 

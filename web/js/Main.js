@@ -61,4 +61,9 @@ window.addEventListener( "load", function() {
 
     });
 
+
+    //Bootstrap popovers
+
+    $('[data-toggle="tooltip"]').tooltip();
+
 });

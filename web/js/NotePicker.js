@@ -52,7 +52,7 @@ EM.NotePicker.prototype = {
         scope.noteArea = document.getElementById( scope.noteId );
         scope.noteHTML = scope.noteArea.outerHTML;
 
-        scope.setEvents();
+        scope.setAddEvents();
 
         scope.setBeatEvents( scope.beatArea );
 
@@ -63,7 +63,7 @@ EM.NotePicker.prototype = {
      * Set global events
      */
 
-    setEvents: function() {
+    setAddEvents: function() {
 
         var scope = this;
         var btn = document.getElementById( scope.beatAddId );
@@ -117,7 +117,7 @@ EM.NotePicker.prototype = {
 
         var scope = this;
 
-        var inputs = div.getElementsByTagName( "input" );
+        var inputs = div.getElementsByTagName( "select" );
         var il = inputs.length;
 
         for( var i = 0; i < il; ++ i ) {
@@ -169,15 +169,22 @@ EM.NotePicker.prototype = {
 
     getABCFromBeat: function( beat ) {
 
+        var scope = this;
+
         var length = 0,
             notes = [];
 
-        var inputs = beat.getElementsByTagName( "input" );
+        var inputs = beat.getElementsByTagName( "select" );
         var il = inputs.length;
 
         for( var i = 0; i < il; ++ i ) {
 
             var input = inputs[ i ];
+
+            scope.checkRandom( input );
+
+            if( input.value === "" ) { continue; }
+
             var val = input.value | 0;
             var name = input.getAttribute( "name" );
 
@@ -225,15 +232,56 @@ EM.NotePicker.prototype = {
 
     getArgs: function() {
 
+        var scope = this;
+
         var midi = [];
         var dividers = [];
         var lengths = [];
+
+        var beats = scope.getABC();
+        var bl = beats.length;
+
+        var lastDivide = 0;
+
+        for( var i = 0; i < bl; ++ i ) {
+
+            var beat = beats[ i ];
+
+            midi = midi.concat( beat.notes );
+
+            dividers.push( lastDivide + beat.notes.length );
+            lengths.push( beat.length );
+
+            lastDivide += beat.notes.length;
+
+        }
 
         return [
             midi,
             dividers,
             lengths
         ];
+
+    },
+
+
+    /**
+     * Random select item
+     */
+
+    checkRandom: function( input ) {
+
+        if( input.value !== "random" ) {
+
+            return;
+
+        }
+
+        var opts = input.options.length - 2;
+
+        var index = Math.floor( ( Math.random() * opts ) + 2 );
+
+        input.selectedIndex = index;
 
     }
 

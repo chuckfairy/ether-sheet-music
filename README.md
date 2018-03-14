@@ -63,8 +63,9 @@ Run
 
 # TODO
 
-- Midi download fix, problem exists in abcjs
-
+- Sequencer
+- Contract onlyOwner allow change of minimum and milestone goal to future proof
+- Midi download fix, problem exists in abcjs for linux
 
 ## Maybes
 

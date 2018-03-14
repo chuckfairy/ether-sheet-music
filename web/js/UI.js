@@ -200,6 +200,7 @@ EM.UI.prototype = {
         var donation = document.getElementById( "donation" );
 
         var creatorView = document.getElementById( "note-creator-view" );
+        var listenView = document.getElementById( "note-creator-listen" );
 
 
         //Main submit
@@ -213,7 +214,7 @@ EM.UI.prototype = {
 
             //Launch contract call
 
-            scope.Music.createNote(
+            scope.Music.createBeat(
                 donation.value,
                 args[ 0 ],
                 args[ 1 ],
@@ -235,34 +236,14 @@ EM.UI.prototype = {
 
             }
 
-            var note = scope.Music.convertMidiToABC(
-                [ noteNumber.value ],
-                noteLength.value|0
-            );
+            var abc = scope.Music.convertArrayToABC( beats );
+            abc = "L: 1/32\n" +
+                ":" + abc;
 
-            var abc = "L: 1/32\n" +
-                ":" + note;
-
+            ABCJS.renderMidi( listenView, abc );
             ABCJS.renderAbc( creatorView, abc );
 
         }
-
-        function checkRandom( input ) {
-
-            if( input.value !== "random" ) {
-
-                return;
-
-            }
-
-            var opts = input.options.length - 2;
-
-            var index = Math.floor( ( Math.random() * opts ) + 2 );
-
-            input.selectedIndex = index;
-
-        }
-
 
         //Events
 
@@ -372,7 +353,8 @@ EM.UI.prototype = {
         var goal = scope.Music.globalStats.goal;
 
         var vars = {
-            stats: scope.Music.globalStats
+            stats: scope.Music.globalStats,
+            network: scope.Music.getNetworkEtherscan()
         };
 
         scope.templater.render( "global-stats.html", vars, function( template ) {
@@ -381,8 +363,9 @@ EM.UI.prototype = {
 
         });
 
-        var percentRaised = Math.ceil( ( current / goal ) * 10000 );
+        var percentRaised = Math.floor( ( current / goal ) * 10000 );
         percentRaised = percentRaised * .01;
+
         var donationRaisedDiv = document.getElementById( "donation-top-raised" );
         donationRaisedDiv.innerHTML = percentRaised + "% Raised";
 

@@ -8,6 +8,10 @@ body {
     width: 60px;
 }
 
+i, button {
+    cursor: pointer;
+}
+
 
 /**
  * Donation top
@@ -97,6 +101,7 @@ body {
     padding-top: 10px;
 }
 
+
 /**
  * Create note tab
  */
@@ -128,7 +133,7 @@ body {
 
 .note-picker-beat {
     padding: 10px;
-    border: 1px solid #AAA;
+    border: 1px solid #999;
     margin-bottom: 10px;
 }
 

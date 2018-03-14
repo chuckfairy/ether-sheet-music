@@ -68,7 +68,9 @@ function renderContent() {
     stats = {
         goal: web.fromWei( stats[ 0 ].toNumber(), "ether" ),
         min: web.fromWei( stats[ 1 ].toNumber(), "ether" ),
-        current: parseFloat( web.fromWei( stats[ 2 ].toNumber(), "ether" ) )
+        current: parseFloat( web.fromWei( stats[ 2 ].toNumber(), "ether" ) ),
+        milestone: web.fromWei( stats[ 3 ].toNumber(), "ether" ),
+        donatee: stats[ 4 ]
     };
 
     var vars = {
