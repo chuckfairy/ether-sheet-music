@@ -112,12 +112,12 @@ contract SheetMusic is OwnableContract {
 
     uint constant DONATION_GOAL = 100 ether;
 
-    uint constant MINIMUM_DONATION = 0.005 ether;
+    uint private minDonation = 0.005 ether;
 
 
     //Transfer after a certain amount
 
-    uint constant MILESTONE_GOAL = 5 ether;
+    uint private milestoneGoal = 5 ether;
 
 
     //Full donation goal met
@@ -169,7 +169,7 @@ contract SheetMusic is OwnableContract {
 
         //Check note min value
 
-        require( msg.value >= MINIMUM_DONATION );
+        require( msg.value >= minDonation );
 
 
         //Check valid notes
@@ -222,7 +222,7 @@ contract SheetMusic is OwnableContract {
 
         require( userNumberBeats == userNumberLength );
 
-        require( msg.value >= ( MINIMUM_DONATION * userNumberBeats ) );
+        require( msg.value >= ( minDonation * userNumberBeats ) );
 
         checkMidiNotesValue( userNotes );
 
@@ -303,7 +303,7 @@ contract SheetMusic is OwnableContract {
 
         }
 
-        if( milestoneValue >= MILESTONE_GOAL ) {
+        if( milestoneValue >= milestoneGoal ) {
 
             transferMilestone();
             milestoneValue = 0;
@@ -356,9 +356,9 @@ contract SheetMusic is OwnableContract {
 
         return (
             DONATION_GOAL,
-            MINIMUM_DONATION,
+            minDonation,
             totalValue,
-            MILESTONE_GOAL,
+            milestoneGoal,
             donatee
         );
 
@@ -425,9 +425,13 @@ contract SheetMusic is OwnableContract {
 
     function setMinDonation( uint newMin ) onlyOwner external {
 
+        minDonation = newMin;
+
     }
 
     function setMilestone( uint newMile ) onlyOwner external {
+
+        milestoneGoal = newMile;
 
     }
 

@@ -217,6 +217,11 @@ i, button {
     margin: 0;
 }
 
+.composer-midi-data {
+    width: 100%;
+    overflow-x: auto;
+}
+
 
 /**
  * Media queries

@@ -31,7 +31,7 @@ function createNote() {
 
     console.log( "CREATING", note[ 0 ], note[ 1 ]);
 
-    creator.createNote( note[ 0 ], note[ 1 ], trans, function( err, game ) {
+    creator.createNote( note[ 0 ], note[ 1 ], trans, function( err, note ) {
 
         if( err ) {
 
@@ -39,9 +39,8 @@ function createNote() {
 
         }
 
-        console.log( game );
+        console.log( note );
 
     });
 
 }
-
