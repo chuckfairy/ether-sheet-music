@@ -31,7 +31,7 @@ function createNote() {
 
     console.log( "CREATING", note[ 0 ], note[ 1 ]);
 
-    creator.createNote( note[ 0 ], note[ 1 ], trans, function( err, note ) {
+    creator.createBeat( [ note[ 0 ] ], note[ 1 ], trans, function( err, note ) {
 
         if( err ) {
 

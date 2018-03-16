@@ -94,6 +94,23 @@ EM.Sequencer.prototype = {
 
         scope.area.appendChild( div );
 
+        scope.dispatch({ type: "change" });
+
+    },
+
+
+    /**
+     * Remove beat helper
+     */
+
+    removeBeat: function( div ) {
+
+        var scope = this;
+
+        EM.EditorHelper.removeNode( div );
+
+        scope.dispatch({ type: "change" });
+
     },
 
 
@@ -148,6 +165,38 @@ EM.Sequencer.prototype = {
             EM.EditorHelper.checkRandom( selector );
 
             scope.dispatch({ type: "change" });
+
+        }
+
+        scope.setCloseButtonEvents( div );
+
+    },
+
+
+    /**
+     * Close button events
+     */
+
+    setCloseButtonEvents: function( div ) {
+
+        var scope = this;
+
+        var btns = div.getElementsByClassName( EM.EditorHelper.closeBtnClass );
+        var bl = btns.length;
+
+        for( var i = 0; i < bl; ++ i ) {
+
+            setBtnEvent( btns[ i ] );
+
+        }
+
+        function setBtnEvent( btn ) {
+
+            btn.onclick = function() {
+
+                scope.removeBeat( div );
+
+            };
 
         }
 

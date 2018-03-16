@@ -25,7 +25,15 @@ const Config = {
      * Get eth server
      */
 
-    getEthLocation: function() {
+    getEthLocation: function( network ) {
+
+        var netConfig = config.networks[ network ];
+
+        if( ! netConfig ) {
+
+            throw new Error( "No network configured for " + network );
+
+        }
 
         return config.server + ":" + config.port;
 

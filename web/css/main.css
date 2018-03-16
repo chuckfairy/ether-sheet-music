@@ -21,6 +21,11 @@ i, button {
     background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet);
 }
 
+.close-btn, .close-note-btn {
+    font-size: .8em;
+    padding: 2px 5px;
+}
+
 
 /**
  * Donation top
@@ -62,11 +67,12 @@ i, button {
  * Nav
  */
 
-#main-nav .nav-item {
+#main-nav .nav-item, #main-nav .nav-item-end {
     border-radius: 2px 2px 0 0;
     border: 1px solid #000;
     margin-right: 2px;
     position: relative;
+    min-width: 50px;
 }
 
 #main-nav .nav-item::after {

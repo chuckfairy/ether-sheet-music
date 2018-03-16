@@ -63,9 +63,10 @@
                     <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab">About</a>
                 </li>
 
-            </ul>
+                <li class="nav-item-end">
+                </li>
 
-            <div class="nav-bottom rainbow-gradient"></div>
+            </ul>
 
         </div>
 
@@ -108,7 +109,7 @@
 
             <div class="tab-pane fade" id="music-stats" role="tabpanel">
 
-                <h2>Global Stats</h2>
+                <h2>Project Stats</h2>
 
                 <div id="global-stats">
                     <img class="loader-img" src="./assets/loader.gif">
@@ -162,6 +163,8 @@ var contract, instance;
 
 
 //Network data
+
+var DEFAULT_NETWORK = "{{ Config.default_network }}";
 
 var Networks = {{ Networks | dump | safe }};
 

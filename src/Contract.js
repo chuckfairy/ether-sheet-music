@@ -13,21 +13,31 @@ var Config = require( "./Config.js" );
 
 var Web3 = require( "web3" );
 
-var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation() );
+var EthNetworks = require( "./EthNetworks.js" );
 
-var web = new Web3( Web3Provider );
 
 web.eth.defaultAccount = web.eth.accounts[ 0 ];
 
 
-//Contract grabbing
+/**
+ * Contract grabbing
+ */
 
-var Contract = function() {
+var Contract = function( network ) {
 
     var scope = this;
 
+    scope.network = network;
+    scope.networkName = EthNetworks[ network ] || "unknown";
+
+    var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation( scope.network ) );
+
+    scope.web = new Web3( Web3Provider );
+
     scope.factory = null;
     scope.instance = scope.getContract( "sheet-music" );
+
+    scope.cacheFile = __dirname + "/../cache/" + scope.instance.address + ".json";
 
 };
 
@@ -41,6 +51,13 @@ Contract.prototype = {
 
     loadedNotes: {},
 
+    cacheFile: "",
+
+    network: "",
+    networkName: "",
+
+    web: null,
+
 
     /**
      * Main contract grabber
@@ -50,8 +67,10 @@ Contract.prototype = {
 
         var scope = this;
 
-        var interfaceFile = __dirname + "/../build/" + name + "-contract-abi.json";
-        var contractFile = __dirname + "/../build/deployed-" + name + "-contract.txt";
+        var netAdd = scope.network + "-";
+
+        var interfaceFile = __dirname + "/../build/" + netAdd + name + "-contract-abi.json";
+        var contractFile = __dirname + "/../build/" + netAdd + name + "-contract-deployed.txt";
 
         const CODE = JSON.parse( FS.readFileSync( interfaceFile ).toString() );
 
@@ -72,7 +91,8 @@ Contract.prototype = {
 
     getWeb: function() {
 
-        return web;
+        var scope = this;
+        return scope.web;
 
     },
 
@@ -85,9 +105,22 @@ Contract.prototype = {
 
         var scope = this;
 
+        var cacheData = scope.getCache();
+
+        if( cacheData ) {
+
+            console.log( "LOADED FROM CACHE " + scope.networkName );
+
+            scope.loadedNotes = cacheData;
+            callback();
+
+            return;
+
+        }
+
         var numNotes = scope.instance.getNumberOfBeats().toNumber();
 
-        console.log( "Number of notes " +numNotes );
+        console.log( "Number of notes " + numNotes + " " + scope.networkName );
 
         if( numNotes === 0 ) {
 
@@ -109,6 +142,8 @@ Contract.prototype = {
             itemCallback();
 
         }, function() {
+
+            scope.saveCache();
 
             callback();
 
@@ -141,6 +176,8 @@ Contract.prototype = {
 
             scope.loadedNotes[ noteId ] = note;
 
+            scope.saveCache();
+
             scope.dispatch( { type: "note-created" } );
 
         });
@@ -150,6 +187,51 @@ Contract.prototype = {
     createRange: function( start, end ) {
 
         return Array(end - start + 1).fill().map((_, idx) => start + idx)
+
+    },
+
+
+
+    /**
+     * Save cache
+     */
+
+    saveCache: function() {
+
+        var scope = this;
+
+        var data = JSON.stringify( scope.loadedNotes );
+
+        FS.writeFile( scope.cacheFile, data, function( err, res ) {
+
+            if( err ) {
+
+                console.log( "ERROR SAVING CACHE", err );
+
+            }
+
+        });
+
+    },
+
+
+    /**
+     * Get cache
+     */
+
+    getCache: function() {
+
+        var scope = this;
+
+        if( ! FS.existsSync( scope.cacheFile ) ) {
+
+            return false;
+
+        }
+
+        var data = FS.readFileSync( scope.cacheFile );
+
+        return JSON.parse( data );
 
     }
 

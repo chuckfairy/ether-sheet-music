@@ -7,6 +7,13 @@ EM.EditorHelper = new function() {
 
     var scope = this;
 
+    /**
+     * Props
+     */
+
+    scope.closeBtnClass = "close-btn";
+    scope.closeNoteBtnClass = "close-note-btn";
+
 
     //Check random selector
 
@@ -82,6 +89,17 @@ EM.EditorHelper = new function() {
                 : item.removeAttribute( "required" )
 
         }
+
+    };
+
+
+    /**
+     * Remove parent
+     */
+
+    scope.removeNode = function( node ) {
+
+        node.parentNode.removeChild( node );
 
     };
 

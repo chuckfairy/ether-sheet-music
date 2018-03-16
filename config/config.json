@@ -1,5 +1,10 @@
 {
-    "server": "http://localhost",
-    "port": "8545",
+    "networks": {
+        "5777": {
+            "server": "http://localhost",
+            "port": "8545"
+        }
+    },
+    "default_network": "5777",
     "web_port": "9090"
 }

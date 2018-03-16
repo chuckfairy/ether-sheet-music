@@ -151,7 +151,7 @@ EM.UI.prototype = {
 
         scope.Music.getStats( function( stats ) {
 
-            scope.setFormMinimum();
+            scope.setFormMinimum( 1 );
             scope.updateDonationStats();
 
         });
@@ -221,6 +221,12 @@ EM.UI.prototype = {
             e.preventDefault();
 
             var args = scope.currentEditor.getArgs();
+
+            if( ! args[ 2 ].length ) {
+
+                return alert( "No beats created. Please add some music before submitting" );
+
+            }
 
 
             //Launch contract call
@@ -300,7 +306,9 @@ EM.UI.prototype = {
 
         var beats = scope.currentEditor.getABC();
 
-        if( ! beats || beats[ 0 ].notes.length === 0 ) {
+        scope.setFormMinimum( beats.length || 1 );
+
+        if( ! beats || ! beats.length ) {
 
             creatorView.innerHTML = "";
             return;
@@ -357,7 +365,7 @@ EM.UI.prototype = {
      * Stats
      */
 
-    setFormMinimum: function() {
+    setFormMinimum: function( beats ) {
 
         var scope = this;
 
@@ -366,10 +374,10 @@ EM.UI.prototype = {
 
         //Create form min
         var minArea = document.getElementById( "donation-min-form" );
-        minArea.innerHTML = min;
+        minArea.innerHTML = min * beats;
 
         var donationInput = document.getElementById( "donation" );
-        donationInput.setAttribute( "min", min );
+        donationInput.setAttribute( "min", min * beats );
 
     },
 

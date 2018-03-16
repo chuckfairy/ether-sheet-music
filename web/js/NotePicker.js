@@ -22,6 +22,7 @@ EM.NotePicker.prototype = {
     area: null,
 
     beatId: "note-picker-beat",
+    beatClass: "note-picker-beat",
     beatArea: null,
     beatHTML: "",
 
@@ -96,13 +97,19 @@ EM.NotePicker.prototype = {
 
             scope.setChangeEvents( noteDiv );
 
+            scope.setCloseButtonEvents(
+                noteDiv,
+                EM.EditorHelper.closeNoteBtnClass
+            );
+
             noteArea.appendChild( noteDiv );
 
         };
 
         scope.setChangeEvents( div );
 
-        scope.beats.push( div );
+        scope.setCloseButtonEvents( div, EM.EditorHelper.closeBtnClass );
+        scope.setBeatNoteEvents( div );
 
     },
 
@@ -140,6 +147,54 @@ EM.NotePicker.prototype = {
 
 
     /**
+     * Close button events
+     */
+
+    setCloseButtonEvents: function( div, className ) {
+
+        var scope = this;
+
+        var btns = div.getElementsByClassName( className );
+        var bl = btns.length;
+
+        for( var i = 0; i < bl; ++ i ) {
+
+            setBtnEvent( btns[ i ] );
+
+        }
+
+        function setBtnEvent( btn ) {
+
+            btn.onclick = function() {
+
+                scope.removeBeat( div );
+
+            };
+
+        }
+
+    },
+
+
+    /**
+     * Note close for initial beat creation
+     */
+
+    setBeatNoteEvents: function( div ) {
+
+        var scope = this;
+
+        var btns = div.getElementsByClassName( EM.EditorHelper.closeNoteBtnClass );
+
+        scope.setCloseButtonEvents(
+            btns[ 0 ].parentNode.parentNode.parentNode.parentNode,
+            EM.EditorHelper.closeNoteBtnClass
+        );
+
+    },
+
+
+    /**
      * Render ABC notation
      */
 
@@ -147,13 +202,14 @@ EM.NotePicker.prototype = {
 
         var scope = this;
 
+        var beatDivs = scope.area.getElementsByClassName( scope.beatClass );
         var beats = [];
 
-        var bl = scope.beats.length;
+        var bl = beatDivs.length;
 
         for( var i = 0; i < bl; ++ i ) {
 
-            var beat = scope.beats[ i ];
+            var beat = beatDivs[ i ];
             beats.push( scope.getABCFromBeat( beat ) );
 
         }
@@ -220,6 +276,23 @@ EM.NotePicker.prototype = {
         scope.setBeatEvents( div );
 
         scope.area.appendChild( div );
+
+        scope.dispatch({ type: "change" });
+
+    },
+
+
+    /**
+     * Remove beat helper
+     */
+
+    removeBeat: function( div ) {
+
+        var scope = this;
+
+        EM.EditorHelper.removeNode( div );
+
+        scope.dispatch({ type: "change" });
 
     },
 

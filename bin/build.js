@@ -2,19 +2,33 @@
 
 var FS = require( "fs" );
 
+
+//Build arg
+
+var NETWORK = process.argv[ 2 ] || false;
+
+if( ! NETWORK ) {
+
+    throw new Error( "No Network Arg Passed" );
+
+}
+
+var BUILD_NAME = NETWORK + "-";
+
+
 //Eth depends
 
 var Config = require( "../src/Config.js" );
 
 var Web3 = require( "web3" );
 
-var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation() );
+var Web3Provider = new Web3.providers.HttpProvider(
+    Config.getEthLocation( NETWORK )
+);
 
 var web = new Web3( Web3Provider );
 
 var Solc = require( "solc" );
-
-var BUILD_NAME = process.argv[ 2 ] ? process.argv[ 2 ] + "-" : "";
 
 
 const MAIN_ADDRESS = web.eth.accounts[ 0 ];
@@ -61,8 +75,8 @@ function compile( contract, name ) {
 
     var interfaceFile = __dirname + "/../build/" + interfaceFileName + ".json";
     var interfaceHistoryFile = __dirname + "/../build/history/" + interfaceFileName + Date.now() + ".json";
-    var contractFile = __dirname + "/../build/deployed-" + contractFileName + ".txt";
-    var contractHistoryFile = __dirname + "/../build/history/deployed-" + contractFileName + Date.now() + ".txt";
+    var contractFile = __dirname + "/../build/" + contractFileName + "-deployed.txt";
+    var contractHistoryFile = __dirname + "/../build/history/" + contractFileName + Date.now() + "-deployed.txt";
 
     FS.writeFileSync( interfaceFile, contract.interface );
     FS.writeFileSync( interfaceHistoryFile, contract.interface );

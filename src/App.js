@@ -3,6 +3,8 @@
  */
 "use strict";
 
+var Async = require( "async" );
+
 var Contract = require( "./Contract.js" );
 
 var Templater = require( "./Templater.js" );
@@ -18,7 +20,10 @@ var Config = require( "./Config.js" );
 
 //Globals
 
-var HTTP, HTML_CONTENT, SheetMusic;
+var HTTP,
+    HTML_CONTENT,
+    Contracts = [],
+    SheetMusic;
 
 
 
@@ -28,7 +33,40 @@ init();
 
 function init() {
 
-    setupContent();
+    setupContracts();
+
+    //setupContent();
+
+}
+
+
+//Setup contracts from config
+
+function setupContracts() {
+
+    var config = Config.getConfig();
+
+    for( var net in config.networks ) {
+
+        var contract = new Contract( net );
+        Contracts.push( contract );
+
+    }
+
+    Async.map( Contracts, function( con, callback ) {
+
+        con.buildNotes( function() {
+
+            callback();
+
+        });
+
+
+    }, function() {
+
+        //setupContent();
+
+    });
 
 }
 

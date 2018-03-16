@@ -271,6 +271,12 @@ EM.Music = function() {
 
         var ml = midiNotes.length;
 
+        if( ml === 0 ) {
+
+            return "z";
+
+        }
+
         for( var i = 0; i < ml; ++ i ) {
 
             var note = midiNotes[ i ];

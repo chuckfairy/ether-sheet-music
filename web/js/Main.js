@@ -36,22 +36,22 @@ window.addEventListener( "load", function() {
 
     // Check if logged in
 
-    init();
-
-    web3 = new Web3( web3.currentProvider );
-
-    contract = web3.eth.contract( abi );
-    instance = contract.at( ADDRESS );
-
     web3.eth.getAccounts( function( err, accounts ) {
+
+        web3.eth.defaultAccount = accounts[ 0 ] || "Not logged in";
+
+        init();
+
+        web3 = new Web3( web3.currentProvider );
+
+        contract = web3.eth.contract( abi );
+        instance = contract.at( ADDRESS );
 
         if( err || ! accounts || ! accounts.length ) {
 
             return alert( "Please login to MetaMask and connect to ropsten test net" );
 
         }
-
-        web3.eth.defaultAccount = web3.eth.accounts[ 0 ];
 
         web3.eth.getGasPrice( function( err, price ) {
 
