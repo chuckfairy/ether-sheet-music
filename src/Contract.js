@@ -16,8 +16,6 @@ var Web3 = require( "web3" );
 var EthNetworks = require( "./EthNetworks.js" );
 
 
-web.eth.defaultAccount = web.eth.accounts[ 0 ];
-
 
 /**
  * Contract grabbing
@@ -76,7 +74,7 @@ Contract.prototype = {
 
         const ADDR = FS.readFileSync( contractFile ).toString().trim();
 
-        scope.factory = web.eth.contract( CODE );
+        scope.factory = scope.web.eth.contract( CODE );
 
         var contract = scope.factory.at( ADDR );
 
@@ -109,10 +107,11 @@ Contract.prototype = {
 
         if( cacheData ) {
 
-            console.log( "LOADED FROM CACHE " + scope.networkName );
+            console.log( "LOADED FROM CACHE : " + scope.networkName );
 
             scope.loadedNotes = cacheData;
-            callback();
+
+            scope.updateCache( callback );
 
             return;
 
@@ -120,7 +119,7 @@ Contract.prototype = {
 
         var numNotes = scope.instance.getNumberOfBeats().toNumber();
 
-        console.log( "Number of notes " + numNotes + " " + scope.networkName );
+        console.log( "Number of notes " + numNotes + " : " + scope.networkName );
 
         if( numNotes === 0 ) {
 
@@ -232,6 +231,51 @@ Contract.prototype = {
         var data = FS.readFileSync( scope.cacheFile );
 
         return JSON.parse( data );
+
+    },
+
+
+    /**
+     * Check for updated changes
+     */
+
+    updateCache: function( callback ) {
+
+        var scope = this;
+
+        var numNotes = scope.instance.getNumberOfBeats().toNumber();
+
+        var loadedKeys = Object.keys( scope.loadedNotes );
+
+        var lastKey = loadedKeys[ loadedKeys.length - 1 ];
+
+        if( ( lastKey | 0 ) === ( numNotes | 0 ) ) {
+
+            callback();
+
+            return;
+
+        }
+
+        var numArray = scope.createRange( lastKey, numNotes );
+
+        Async.map( numArray, function( item, itemCallback ) {
+
+            var note = scope.instance.getBeat( item );
+
+            scope.loadedNotes[ item ] = note;
+
+            console.log( "Loaded note " + item );
+
+            itemCallback();
+
+        }, function() {
+
+            scope.saveCache();
+
+            callback();
+
+        });
 
     }
 

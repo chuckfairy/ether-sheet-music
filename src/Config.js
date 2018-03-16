@@ -35,7 +35,13 @@ const Config = {
 
         }
 
-        return config.server + ":" + config.port;
+        return netConfig.server + ":" + netConfig.port;
+
+    },
+
+    getDefaultLocation: function() {
+
+        return Config.getEthLocation( config.default_network );
 
     }
 

@@ -14,9 +14,13 @@ EM.Music = function() {
         fromBlock: "latest"
     };
 
-    scope.notesLoaded = typeof( NOTES[ 1 ] ) !== "undefined" ? NOTES : null;
+    scope.abcCache = {};
 
-    scope.globalStats = GLOBAL_STATS || null;
+    var NET_NOTES = NOTES[ NETWORK ];
+
+    scope.notesLoaded = typeof( NET_NOTES[ 1 ] ) !== "undefined" ? NET_NOTES : null;
+
+    scope.globalStats = GLOBAL_STATS[ NETWORK ] || null;
 
 
     /**
@@ -293,6 +297,12 @@ EM.Music = function() {
 
     scope.convertMidiToABCNote = function( midi ) {
 
+        if( scope.abcCache[ midiNumber ] ) {
+
+            return scope.abcCache[ midiNumber ];
+
+        }
+
         var midiName = Midi.NoteNumber[ midi ];
         midiName = midiName.midi;
 
@@ -322,6 +332,8 @@ EM.Music = function() {
             abc = "^" + abc;
 
         }
+
+        scope.abcCache[ midiNumber ] = abc;
 
         return abc;
 

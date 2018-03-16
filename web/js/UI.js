@@ -460,7 +460,13 @@ EM.UI.prototype = {
 
             var pieceOpts = { responsive: "resize" };
 
-            ABCJS.renderAbc( scope.pieceId, template, pieceOpts, pieceOpts, pieceOpts );
+            ABCJS.renderAbc(
+                scope.pieceId,
+                template,
+                pieceOpts,
+                pieceOpts,
+                pieceOpts
+            );
 
 
             //Midi setup
@@ -470,8 +476,8 @@ EM.UI.prototype = {
                 generateInline: false
             };
 
-			ABCJS.renderMidi( scope.pieceMidiPlayId, template );
-			ABCJS.renderMidi(
+            ABCJS.renderMidi( scope.pieceMidiPlayId, template );
+            ABCJS.renderMidi(
                 scope.pieceMidiDownloadId,
                 template,
                 {},
@@ -529,9 +535,7 @@ EM.UI.prototype = {
         var width = 150;
         var height = 300;
 
-        for( var i = 0; i < nl; ++ i ) {
-
-            var note = notes[ i ];
+        async.mapSeries( notes, function( note, callback ) {
 
             var abc = note.getAttribute( "data-note" );
 
@@ -539,7 +543,9 @@ EM.UI.prototype = {
 
             note.className = "";
 
-        }
+            setTimeout( callback, 50 );
+
+        });
 
     },
 

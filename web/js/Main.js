@@ -38,14 +38,17 @@ window.addEventListener( "load", function() {
 
     web3.eth.getAccounts( function( err, accounts ) {
 
+        NETWORK = web3.version.network;
+
         web3.eth.defaultAccount = accounts[ 0 ] || "Not logged in";
 
-        init();
-
-        web3 = new Web3( web3.currentProvider );
-
         contract = web3.eth.contract( abi );
-        instance = contract.at( ADDRESS );
+
+        var adr = ADDRESSES[ NETWORK ];
+
+        instance = contract.at( adr );
+
+        init();
 
         if( err || ! accounts || ! accounts.length ) {
 

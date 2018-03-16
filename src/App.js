@@ -55,16 +55,24 @@ function setupContracts() {
 
     Async.map( Contracts, function( con, callback ) {
 
+        con.on( "note-created", function() {
+
+            renderContent();
+
+        });
+
         con.buildNotes( function() {
 
             callback();
 
         });
 
+        con.setupListeners();
 
     }, function() {
 
-        //setupContent();
+        setupHTTP();
+        renderContent();
 
     });
 
@@ -95,36 +103,6 @@ function setupContent() {
 
 }
 
-function renderContent() {
-
-    var contract = SheetMusic.instance;
-
-    var stats = SheetMusic.instance.getDonationStats();
-
-    var web = SheetMusic.getWeb();
-
-    stats = {
-        goal: web.fromWei( stats[ 0 ].toNumber(), "ether" ),
-        min: web.fromWei( stats[ 1 ].toNumber(), "ether" ),
-        current: parseFloat( web.fromWei( stats[ 2 ].toNumber(), "ether" ) ),
-        milestone: web.fromWei( stats[ 3 ].toNumber(), "ether" ),
-        donatee: stats[ 4 ]
-    };
-
-    var vars = {
-        abi: JSON.stringify( contract.abi ),
-        contract: contract,
-        Midi: Midi,
-        Networks: Networks,
-        notes: SheetMusic.loadedNotes,
-        globalStats: stats
-    };
-
-    HTML_CONTENT = Templater.getTemplate( "main.html", vars );
-
-    HTTP.indexContent = HTML_CONTENT;
-
-}
 
 //Setup http server
 
@@ -133,5 +111,63 @@ function setupHTTP() {
     HTTP = new HTTPResponse( HTML_CONTENT, {
         port: Config.getConfig().web_port
     });
+
+}
+
+
+/**
+ * Content funcs
+ */
+
+function renderContent() {
+
+    var vars = getContentArgs();
+
+    HTML_CONTENT = Templater.getTemplate( "main.html", vars );
+
+    HTTP.indexContent = HTML_CONTENT;
+
+}
+
+function getContentArgs() {
+
+    var addresses = {},
+        notes = {},
+        stats = {};
+
+    var cl = Contracts.length;
+
+    for( var i = 0; i < cl; ++ i ) {
+
+        var con = Contracts[ i ];
+        var instance = con.instance;
+
+        var conStats = instance.getDonationStats();
+
+        var web = con.getWeb();
+
+        conStats = {
+            goal: web.fromWei( conStats[ 0 ].toNumber(), "ether" ),
+            min: web.fromWei( conStats[ 1 ].toNumber(), "ether" ),
+            current: parseFloat( web.fromWei( conStats[ 2 ].toNumber(), "ether" ) ),
+            milestone: web.fromWei( conStats[ 3 ].toNumber(), "ether" ),
+            donatee: conStats[ 4 ]
+        };
+
+        addresses[ con.network ] = instance.address;
+        notes[ con.network ] = con.loadedNotes;
+        stats[ con.network ] = conStats;
+
+    }
+
+    return {
+        abi: JSON.stringify( Contracts[ 0 ].instance.abi ),
+        addresses: addresses,
+        Midi: Midi,
+        Networks: Networks,
+        notes: notes,
+        stats: stats,
+        config: Config.config
+    };
 
 }

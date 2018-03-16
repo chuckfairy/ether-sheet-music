@@ -152,8 +152,6 @@
 
 var abi = {{ abi | safe }};
 
-var ADDRESS = "{{ contract.address }}";
-
 var GAS_PRICE;
 
 
@@ -164,9 +162,13 @@ var contract, instance;
 
 //Network data
 
-var DEFAULT_NETWORK = "{{ Config.default_network }}";
+var DEFAULT_NETWORK = "{{ config.default_network }}";
 
 var Networks = {{ Networks | dump | safe }};
+
+var NETWORK = DEFAULT_NETWORK;
+
+var ADDRESSES = {{ addresses | dump | safe }};
 
 
 //Midi data dump from node
@@ -181,7 +183,7 @@ var NOTES = {{ notes | dump | safe }};
 
 //Stats Cache
 
-var GLOBAL_STATS = {{ globalStats | dump | safe }};
+var GLOBAL_STATS = {{ stats | dump | safe }};
 
 
 //Has web3

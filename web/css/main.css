@@ -12,20 +12,6 @@ i, button {
     cursor: pointer;
 }
 
-.rainbow-gradient {
-    height: 200px;
-    background: red;
-    background: -webkit-linear-gradient(left, red, orange , yellow, green, cyan, blue, violet);
-    background: -o-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
-    background: -moz-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
-    background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet);
-}
-
-.close-btn, .close-note-btn {
-    font-size: .8em;
-    padding: 2px 5px;
-}
-
 
 /**
  * Donation top
@@ -120,6 +106,20 @@ i, button {
 
 .tab-content {
     padding-top: 10px;
+}
+
+.rainbow-gradient {
+    height: 200px;
+    background: red;
+    background: -webkit-linear-gradient(left, red, orange , yellow, green, cyan, blue, violet);
+    background: -o-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
+    background: -moz-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
+    background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet);
+}
+
+.close-btn, .close-note-btn {
+    font-size: .8em;
+    padding: 2px 5px;
 }
 
 
