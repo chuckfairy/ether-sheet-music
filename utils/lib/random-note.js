@@ -15,4 +15,25 @@ function RandomNote() {
 
 }
 
+function RandomChord( maxNotes ) {
+
+    maxNotes = ( maxNotes | 0 ) || 10;
+
+    var notes = Math.floor( Math.random() * maxNotes );
+
+    var midis = [];
+    var length;
+
+    for( var i = 0; i < maxNotes; ++ i ) {
+
+        var note = RandomNote();
+        midis.push( note[ 0 ] );
+        length = note[ 1 ];
+
+    }
+
+    return [ midis, length ];
+
+}
+
 module.exports = RandomNote;

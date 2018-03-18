@@ -77,6 +77,7 @@ Run
 # TODO
 
 - Multi network configuration
+- natural note fixes for last played possible sharp
 - Midi download fix, problem exists in abcjs for linux
 
 

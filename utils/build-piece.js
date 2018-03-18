@@ -52,6 +52,10 @@ function buildSounds( addr, file ) {
 
     ChildProcess.exec( abc2midi, function() {
 
+        return;
+
+        // Timidity wav file export
+
         var timCmd = "timidity " + midiName + " -Ow";
 
         console.log( "\n", timCmd, "\n" );

@@ -18,6 +18,8 @@ var ABC = new function() {
 
     var scope = this;
 
+    scope.lastSharp = {};
+
 
     /**
      * Build ABC helper
@@ -118,14 +120,18 @@ var ABC = new function() {
 
     }
 
-    scope.convertMidiToABCNote = function( midi ) {
+    scope.convertMidiToABCNote = function( midi, fromChord ) {
+
+        var midi = midi | 0;
 
         var midiName = Midi.NoteNumber[ midi ];
         midiName = midiName.midi;
 
-        var abc = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
+        var midiLetter = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
         var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
         var sharp = midiName.indexOf( "#" ) !== -1;
+
+        var abc = midiLetter;
 
         //Uppercase if over middle 4
         var lowerCase = midiNumber > 4;
@@ -150,9 +156,27 @@ var ABC = new function() {
 
         } else {
 
-            abc = "=" + abc;
+            //Natural note explicit
+
+            var nextMidiNum = midi + 1;
+            var nextMidi = Midi.NoteNumber[ nextMidiNum ];
+
+            if( nextMidi ) {
+
+                var nextMidiName = nextMidi.midi.replace( /(\w)\#?(\d+)/, "\$1" );
+
+                if( nextMidiName === midiLetter && !! scope.lastSharp[ nextMidiNum ] ) {
+
+                    scope.lastSharp[ nextMidiNum ] = false;
+                    abc = "=" + abc;
+
+                }
+
+            }
 
         }
+
+        scope.lastSharp[ midi ] = true;
 
         return abc;
 
