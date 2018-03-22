@@ -46,6 +46,12 @@ window.addEventListener( "load", function() {
 
         var adr = ADDRESSES[ NETWORK ];
 
+        if( ! adr ) {
+
+            alert( "Network not configured for ethermusic.io " + NETWORK );
+
+        }
+
         instance = contract.at( adr );
 
         init();

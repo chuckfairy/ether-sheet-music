@@ -5,8 +5,9 @@
 
 var FS = require( "fs" );
 
-var config = FS.readFileSync( __dirname + "/../config/config.json" );
-config = JSON.parse( config );
+const configData = FS.readFileSync( __dirname + "/../config/config.json" );
+
+const config = JSON.parse( configData );
 
 const Config = {
 
@@ -35,7 +36,17 @@ const Config = {
 
         }
 
-        return netConfig.server + ":" + netConfig.port;
+        return netConfig.server + (
+            ( netConfig.port )
+                ? ":" + netConfig.port
+                : ""
+        );
+
+    },
+
+    getNetworkConfig: function( network ) {
+
+        return config.networks[ network ];
 
     },
 

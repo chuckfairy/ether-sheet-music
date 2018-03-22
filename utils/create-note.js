@@ -7,7 +7,9 @@ var Contract = require( "../src/Contract.js" );
 
 var RandomNote = require( "./lib/random-note.js" );
 
-var SheetMusic = new Contract;
+var Config = require( "../src/Config.js" );
+
+var SheetMusic = new Contract( Config.getConfig().default_network );
 
 var web = SheetMusic.getWeb();
 

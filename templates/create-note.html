@@ -21,22 +21,22 @@
     <ul class="nav nav-tabs" id="creator-tabs" role="tablist">
 
         <li class="nav-item">
-            <a class="nav-link active" id="note-picker-tab" data-toggle="tab" href="#note-picker-content" role="tab">Note Picker</a>
+            <a class="nav-link active" id="sequencer-tab" data-toggle="tab" href="#sequencer-content" role="tab">Sequencer</a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link" id="sequencer-tab" data-toggle="tab" href="#sequencer-content" role="tab">Sequencer</a>
+            <a class="nav-link" id="note-picker-tab" data-toggle="tab" href="#note-picker-content" role="tab">Note Picker</a>
         </li>
 
     </ul>
 
     <div class="tab-content">
 
-        <div class="tab-pane fade show active" id="note-picker-content">
+        <div class="tab-pane fade" id="note-picker-content">
             {% include "note-picker.html" %}
         </div>
 
-        <div class="tab-pane fade" id="sequencer-content">
+        <div class="tab-pane fade show active" id="sequencer-content">
             {% include "sequencer.html" %}
         </div>
 

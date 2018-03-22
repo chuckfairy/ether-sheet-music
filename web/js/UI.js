@@ -15,13 +15,13 @@ EM.UI = function( music ) {
     scope.NotePicker = new EM.NotePicker();
     scope.Sequencer = new EM.Sequencer();
 
-    scope.NotePicker.setRequired( true );
-    scope.Sequencer.setRequired( false );
+    scope.NotePicker.setRequired( false );
+    scope.Sequencer.setRequired( true );
 
 
     //Default to note picker
 
-    scope.currentEditor = scope.NotePicker;
+    scope.currentEditor = scope.Sequencer;
 
     scope.init();
 
@@ -68,6 +68,9 @@ EM.UI.prototype = {
 
     newNoteCreated: false,
 
+    tempoId: "music-piece-bpm",
+    tempoInput: null,
+
 
     /**
      * Main
@@ -81,6 +84,8 @@ EM.UI.prototype = {
         scope.statsDom = document.getElementById( scope.statsId );
         scope.composersDom = document.getElementById( scope.composersId );
         scope.messagesDom = document.getElementById( scope.messagesId );
+
+        scope.tempoInput = document.getElementById( scope.tempoId );
 
         scope.createForm = document.getElementById( scope.createFormId );
 
@@ -116,6 +121,12 @@ EM.UI.prototype = {
         });
 
         setTimeout( scope.setupAddressHeader, 250 );
+
+        scope.tempoInput.onchange = function() {
+
+            scope.renderPiece();
+
+        };
 
     },
 
@@ -171,7 +182,7 @@ EM.UI.prototype = {
 
             composers = EM.Shim.getValues( composers );
 
-            scope.renderPiece( composers );
+            scope.renderPiece();
 
             scope.composersDom.innerHTML = "";
 
@@ -316,14 +327,19 @@ EM.UI.prototype = {
         }
 
         var abc = scope.Music.convertArrayToABC( beats );
-        abc = "L: 1/32\n" +
+        abc = "X: 1\n" +
+            "K: C\n" +
+            "L: 1/32\n" +
             ":" + abc;
 
-        ABCJS.renderAbc( creatorView, abc );
-        var midiRender = ABCJS.renderMidi( listenView, abc );
+        var midiOpts = {
+            inlineControls: {
+                startPlaying: true
+            }
+        };
 
-        var playBtn = listenView.getElementsByClassName( "abcjs-midi-start" );
-        setTimeout( function() { playBtn[ 0 ].click() }, 25 );
+        ABCJS.renderAbc( creatorView, abc );
+        var midiRender = ABCJS.renderMidi( listenView, abc, midiOpts, midiOpts );
 
     },
 
@@ -350,9 +366,7 @@ EM.UI.prototype = {
 
             scope.renderComposerNotes( [ note ] );
 
-            scope.renderPiece(
-                EM.Shim.getValues( scope.Music.notesLoaded )
-            );
+            scope.renderPiece();
 
         });
 
@@ -432,6 +446,7 @@ EM.UI.prototype = {
 
         var percentRaised = Math.floor( ( current / goal ) * 10000 );
         percentRaised = percentRaised * .01;
+        percentRaised = percentRaised.toFixed( 2 );
 
         var donationRaisedDiv = document.getElementById( "donation-top-raised" );
         donationRaisedDiv.innerHTML = percentRaised + "% Raised";
@@ -446,12 +461,15 @@ EM.UI.prototype = {
      * Render the piece
      */
 
-    renderPiece: function( notes ) {
+    renderPiece: function() {
 
         var scope = this;
 
+        var notes = EM.Shim.getValues( scope.Music.notesLoaded );
+
         var vars = {
-            notes: notes
+            notes: notes,
+            tempo: scope.tempoInput.value | 0
         };
 
         scope.templater.render( "abc-piece.html", vars, function( template ) {

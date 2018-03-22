@@ -17,7 +17,8 @@
     "networks": {
         "5777": {
             "server": "http://localhost",
-            "port": "8545" //Not required
+            "port": "8545", //Not required
+            "donatee": "0xADDRESS" //Donation receiver
         }
     },
     "default_network": "5777", //Mainly for testing
@@ -76,8 +77,7 @@ Run
 
 # TODO
 
-- Multi network configuration
-- natural note fixes for last played possible sharp
+- cache test / fix
 - Midi download fix, problem exists in abcjs for linux
 
 

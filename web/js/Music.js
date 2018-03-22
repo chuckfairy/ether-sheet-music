@@ -14,7 +14,7 @@ EM.Music = function() {
         fromBlock: "latest"
     };
 
-    scope.abcCache = {};
+    scope.lastSharp = {};
 
     var NET_NOTES = NOTES[ NETWORK ];
 
@@ -283,9 +283,15 @@ EM.Music = function() {
 
         for( var i = 0; i < ml; ++ i ) {
 
+            midiNotes[ i ] = midiNotes[ i ] | 0;
+
+        }
+
+        for( var i = 0; i < ml; ++ i ) {
+
             var note = midiNotes[ i ];
 
-            var abc = scope.convertMidiToABCNote( note );
+            var abc = scope.convertMidiToABCNote( note, midiNotes );
 
             out.push( abc );
 
@@ -295,20 +301,16 @@ EM.Music = function() {
 
     }
 
-    scope.convertMidiToABCNote = function( midi ) {
-
-        if( scope.abcCache[ midiNumber ] ) {
-
-            return scope.abcCache[ midiNumber ];
-
-        }
+    scope.convertMidiToABCNote = function( midi, fromChord ) {
 
         var midiName = Midi.NoteNumber[ midi ];
         midiName = midiName.midi;
 
-        var abc = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
+        var midiLetter = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
         var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
         var sharp = midiName.indexOf( "#" ) !== -1;
+
+        var abc = midiLetter;
 
         //Uppercase if over middle 4
         var lowerCase = midiNumber > 4;
@@ -331,9 +333,39 @@ EM.Music = function() {
 
             abc = "^" + abc;
 
+        } else {
+
+            //Natural note explicit
+
+            var nextMidiNum = midi + 1;
+            var nextMidi = Midi.NoteNumber[ nextMidiNum ];
+
+            //Check if played prior
+
+            if( nextMidi ) {
+
+                var nextMidiName = nextMidi.midi.replace( /(\w)\#?(\d+)/, "\$1" );
+
+                if( nextMidiName === midiLetter && !! scope.lastSharp[ nextMidiNum ] ) {
+
+                    scope.lastSharp[ nextMidiNum ] = false;
+                    abc = "=" + abc;
+
+                }
+
+                //Check if sharp in chord
+
+                else if ( fromChord.indexOf( nextMidi ) !== -1 ) {
+
+                    abc = "=" + abc;
+
+                }
+
+            }
+
         }
 
-        scope.abcCache[ midiNumber ] = abc;
+        scope.lastSharp[ midi ] = true;
 
         return abc;
 

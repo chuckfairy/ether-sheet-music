@@ -108,9 +108,15 @@ var ABC = new function() {
 
         for( var i = 0; i < ml; ++ i ) {
 
+            midiNotes[ i ] = midiNotes[ i ] | 0;
+
+        }
+
+        for( var i = 0; i < ml; ++ i ) {
+
             var note = midiNotes[ i ];
 
-            var abc = scope.convertMidiToABCNote( note );
+            var abc = scope.convertMidiToABCNote( note, midiNotes );
 
             out.push( abc );
 
@@ -121,8 +127,6 @@ var ABC = new function() {
     }
 
     scope.convertMidiToABCNote = function( midi, fromChord ) {
-
-        var midi = midi | 0;
 
         var midiName = Midi.NoteNumber[ midi ];
         midiName = midiName.midi;
@@ -161,13 +165,26 @@ var ABC = new function() {
             var nextMidiNum = midi + 1;
             var nextMidi = Midi.NoteNumber[ nextMidiNum ];
 
+
+            //Has a sharp at all
+
             if( nextMidi ) {
+
+                //Check if played prior
 
                 var nextMidiName = nextMidi.midi.replace( /(\w)\#?(\d+)/, "\$1" );
 
                 if( nextMidiName === midiLetter && !! scope.lastSharp[ nextMidiNum ] ) {
 
                     scope.lastSharp[ nextMidiNum ] = false;
+                    abc = "=" + abc;
+
+                }
+
+                //Check if sharp in chord
+
+                else if ( fromChord.indexOf( nextMidi ) !== -1 ) {
+
                     abc = "=" + abc;
 
                 }

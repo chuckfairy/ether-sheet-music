@@ -6,6 +6,7 @@ var FS = require( "fs" );
 //Build arg
 
 var NETWORK = process.argv[ 2 ] || false;
+var PASS = typeof( process.argv[ 3 ] ) === "undefined" ? false : process.argv[ 3 ];
 
 if( ! NETWORK ) {
 
@@ -20,6 +21,8 @@ var BUILD_NAME = NETWORK + "-";
 
 var Config = require( "../src/Config.js" );
 
+var NetworkConfig = Config.getNetworkConfig( NETWORK );
+
 var Web3 = require( "web3" );
 
 var Web3Provider = new Web3.providers.HttpProvider(
@@ -32,9 +35,15 @@ var Solc = require( "solc" );
 
 
 const MAIN_ADDRESS = web.eth.accounts[ 0 ];
-//web.personal.unlockAccount( MAIN_ADDRESS, "" );
 
-//console.log( MAIN_ADDRESS, web.eth.getBalance( MAIN_ADDRESS ).toNumber() );
+
+//Unlock is provided or needed
+
+if( PASS ) {
+
+    web.personal.unlockAccount( MAIN_ADDRESS, PASS );
+
+}
 
 
 //Code
@@ -70,6 +79,12 @@ if( compiled.contracts[ ":SheetMusic" ] ) {
 
 function compile( contract, name ) {
 
+    if( ! NetworkConfig.donatee ) {
+
+        throw new Error( "Network config does not have donatee address " + NETWORK );
+
+    }
+
     var interfaceFileName = BUILD_NAME + name + "-contract-abi";
     var contractFileName = BUILD_NAME + name + "-contract";
 
@@ -95,9 +110,11 @@ function compile( contract, name ) {
 
     //Estimate Gas
 
-    var contractData = contractFactory.new.getData( { data: contractByteCode } );
+    var contractData = contractFactory.new.getData(
+        NetworkConfig.donatee,
+        { data: contractByteCode }
+    );
 
-    //console.log( contractData );
     var estimate = web.eth.estimateGas( { data: contractData } );
 
 	var data = {
@@ -112,13 +129,13 @@ function compile( contract, name ) {
 
 	// create contract
 
-	web.eth.contract( abi ).new( data, function (err, contract ) {
+	web.eth.contract( abi ).new( NetworkConfig.donatee, data, function (err, contract ) {
 
 		if( err ) {
 
 			console.error( err );
 
-		} else if(contract.address){
+		} else if( contract.address ) {
 
 			myContract = contract;
 

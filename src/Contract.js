@@ -32,8 +32,9 @@ var Contract = function( network ) {
 
     scope.web = new Web3( Web3Provider );
 
-    scope.factory = null;
     scope.instance = scope.getContract( "sheet-music" );
+
+    scope.loadedNotes = {},
 
     scope.cacheFile = __dirname + "/../cache/" + scope.instance.address + ".json";
 
@@ -50,6 +51,8 @@ Contract.prototype = {
     loadedNotes: {},
 
     cacheFile: "",
+
+    factory: null,
 
     network: "",
     networkName: "",
@@ -159,6 +162,16 @@ Contract.prototype = {
 
         createEvent.watch( function( err, response ) {
 
+            if( err ) {
+
+                console.log( err );
+                scope.buildNotes( function() {
+                    scope.dispatch( { type: "note-created" } );
+                });
+                return;
+
+            }
+
             var noteId = response.args.id.toNumber();
 
             //Note already loaded
@@ -243,19 +256,23 @@ Contract.prototype = {
 
         var scope = this;
 
-        var numNotes = scope.instance.getNumberOfBeats().toNumber();
+        console.log( "UPDATING CACHE : " + scope.networkName );
+
+        var numNotes = scope.instance.getNumberOfBeats().toNumber() | 0;
 
         var loadedKeys = Object.keys( scope.loadedNotes );
 
-        var lastKey = loadedKeys[ loadedKeys.length - 1 ];
+        var lastKey = loadedKeys[ loadedKeys.length - 1 ] | 0;
 
-        if( ( lastKey | 0 ) === ( numNotes | 0 ) ) {
+        if( lastKey === numNotes ) {
 
             callback();
 
             return;
 
         }
+
+        console.log( lastKey, numNotes );
 
         var numArray = scope.createRange( lastKey, numNotes );
 

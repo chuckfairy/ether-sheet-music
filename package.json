@@ -15,7 +15,7 @@
         "node-static": "*",
         "nunjucks": "^3.1.2",
         "solc": "^0.4.21",
-        "web3": "*",
+        "web3": "^0.20.6",
         "winston": "^2.4.1"
     },
     "devDependencies": {
