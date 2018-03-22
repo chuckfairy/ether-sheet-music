@@ -167,7 +167,7 @@ function getContentArgs() {
         Networks: Networks,
         notes: notes,
         stats: stats,
-        config: Config.config
+        config: Config.getConfig()
     };
 
 }

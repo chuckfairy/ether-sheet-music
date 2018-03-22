@@ -272,6 +272,16 @@ Contract.prototype = {
 
         }
 
+        if( lastKey > numNotes ) {
+
+            console.log( "WARNING NODE NOT SYNCED OR CACHE IS CORRUPT : " + scope.networkName );
+
+            callback();
+
+            return;
+
+        }
+
         console.log( lastKey, numNotes );
 
         var numArray = scope.createRange( lastKey, numNotes );
