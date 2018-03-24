@@ -53,12 +53,20 @@ i, button {
  * Nav
  */
 
+#main-nav {
+    border-bottom: 7px solid #3E1B5C;
+}
+
 #main-nav .nav-item, #main-nav .nav-item-end {
     border-radius: 2px 2px 0 0;
     border: 1px solid #000;
     margin-right: 2px;
     position: relative;
     min-width: 50px;
+}
+
+.nav-item-end {
+    top: 1px;
 }
 
 #main-nav .nav-item::after {
@@ -195,17 +203,30 @@ i, button {
 
 .sequencer-notes {
     overflow-y: scroll;
-    height: 18em;
+    height: 19em;
+}
+
+.sequencer-black {
+    background: #000;
+    color: #FFF;
+}
+
+.sequencer-white {
+    background: #FFF;
+    color: #000;
 }
 
 .sequencer-note, .sequencer-note-active {
     padding: 10px;
     width: 120px;
     cursor: pointer;
+    border-bottom: solid 1px #AAA;
+    border-left: solid 1px #AAA;
+    border-right: solid 1px #AAA;
 }
 
 .sequencer-note-active {
-    background: #000 !important;
+    background: #FF0000 !important;
     color: #FFF !important;
 }
 

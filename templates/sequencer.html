@@ -37,8 +37,14 @@
             {% set counter = 0 %}
         {% endif %}
 
-        <div style="background: {{ colors[ counter ] }}" class="sequencer-note" data-id="{{ note.id }}">
-            {{ note.midi }} #({{ note.id }})
+        {% if note.midi.indexOf( "#" ) === -1  %}
+            {% set noteClass = "sequencer-white"  %}
+        {% else %}
+            {% set noteClass = "sequencer-black"  %}
+        {% endif %}
+
+        <div class="sequencer-note {{ noteClass }}" data-class="{{ noteClass }}" data-id="{{ note.id }}">
+            {{ note.midi }} ({{ note.id }})
         </div>
 
         {% set counter = counter + 1 %}

@@ -138,13 +138,14 @@ EM.Sequencer.prototype = {
 
             note.onclick = function() {
 
-                if( note.className === scope.noteClass ) {
+                if( note.className === scope.noteActiveClass ) {
 
-                    note.className = scope.noteActiveClass;
+                    var thisNoteClass = note.getAttribute( "data-class" );
+                    note.className = scope.noteClass + " " + thisNoteClass;
 
                 } else {
 
-                    note.className = scope.noteClass;
+                    note.className = scope.noteActiveClass;
 
                 }
 

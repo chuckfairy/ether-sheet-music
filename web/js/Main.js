@@ -48,7 +48,9 @@ window.addEventListener( "load", function() {
 
         if( ! adr ) {
 
-            alert( "Network not configured for ethermusic.io " + NETWORK );
+            alert( "Network not configured for ethermusic.io " + NETWORK + " the piece will be displayed, but not contributable" );
+            NETWORK = DEFAULT_NETWORK;
+            adr = ADDRESSES[ NETWORK ];
 
         }
 
