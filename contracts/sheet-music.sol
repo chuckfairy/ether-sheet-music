@@ -370,7 +370,7 @@ contract SheetMusic is OwnableContract {
 
     }
 
-    function getDonatee() public constant returns( address ) {
+    function getDonatee() external view returns( address ) {
 
         return donatee;
 
