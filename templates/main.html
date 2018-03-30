@@ -76,9 +76,9 @@
 
                 <h2>What is this?</h2>
 
-                <p>This is a fun project that utilizes Ethereum smart contracts to create a piece of music that anyone with ether can contribute too. The question we wish to answer? Can the internet come as one to create a piece of art. Please install <a href="https://metamask.io/" target="_blank">MetaMask</a> or the Mist browser to view and contribute to the piece! If you wish to test out this contract before donating, please point your web3 network to <i>Ropsten</i> and you will be taken to the testing piece.</p>
+                <p>This is a fun project that utilizes Ethereum smart contracts to create a piece of music that anyone with ether can contribute too. The question we wish to answer? Can the internet come as one to create a piece of art. All funds raised in the piece will go to the <a href="https://etherscan.io/address/0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359" target="_blank">Ethereum Foundation Tip Jar</a>. After every milestone is hit (see Stats page), the contract will send it's current balance to the donatee.</p>
 
-                <p>All funds raised in the piece will go to the <a href="https://etherscan.io/address/0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359" target="_blank">Ethereum Foundation Tip Jar</a>. After every milestone is hit (see Stats page), the contract will send it's current balance to the dev fund.</p>
+                <p>Please install <a href="https://metamask.io/" target="_blank">MetaMask</a> or the <a href="https://github.com/ethereum/mist" target="_blank">Mist browser</a> to view and contribute to the piece! If you wish to test out this contract before donating, please point your web3 network to <b><i>Ropsten</i></b> and you will be taken to the testing piece.</p>
 
                 <p> All code is available here <a href="http://github.com/chuckfairy/ether-sheet-music" target="_blank">http://github.com/chuckfairy/ether-sheet-music</a>. If you would like to see other cool projects like this, consider sending us funds at <a href="http://etherscan.io/address/0x102f96e5c6805924e8b21a60b4fa6834bdbb8975" target="_blank">0x102f96e5c6805924e8b21a60b4fa6834bdbb8975</a>. View the About tab for more coin options.</p>
 
@@ -174,6 +174,8 @@ var Networks = {{ Networks | dump | safe }};
 var NETWORK = DEFAULT_NETWORK;
 
 var ADDRESSES = {{ addresses | dump | safe }};
+
+var ADDRESS = "";
 
 
 //Midi data dump from node

@@ -231,7 +231,7 @@ EM.Music = function() {
 
     scope.formatNote = function( noteId, note ) {
 
-        var midi = note[ 1 ];
+        var midi = EM.Shim.arrayUnique( note[ 1 ] );
         var length = note[ 2 ] | 0;
 
         var midiABC = scope.convertMidiToABC( midi, length );

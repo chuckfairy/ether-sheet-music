@@ -77,7 +77,6 @@ Run
 
 # TODO
 
-- cache test / fix
 - Midi download fix, problem exists in abcjs for linux
 
 

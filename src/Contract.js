@@ -73,6 +73,12 @@ Contract.prototype = {
         var interfaceFile = __dirname + "/../build/" + netAdd + name + "-contract-abi.json";
         var contractFile = __dirname + "/../build/" + netAdd + name + "-contract-deployed.txt";
 
+        if( ! FS.existsSync( interfaceFile ) || ! FS.existsSync( contractFile ) ) {
+
+            throw new Error( "Contract not configured for network : " + scope.networkName );
+
+        }
+
         const CODE = JSON.parse( FS.readFileSync( interfaceFile ).toString() );
 
         const ADDR = FS.readFileSync( contractFile ).toString().trim();

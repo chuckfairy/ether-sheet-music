@@ -435,7 +435,8 @@ EM.UI.prototype = {
 
         var vars = {
             stats: scope.Music.globalStats,
-            network: scope.Music.getNetworkEtherscan()
+            network: scope.Music.getNetworkEtherscan(),
+            address: ADDRESS
         };
 
         scope.templater.render( "global-stats.html", vars, function( template ) {

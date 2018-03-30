@@ -48,19 +48,22 @@ window.addEventListener( "load", function() {
 
         if( ! adr ) {
 
-            alert( "Network not configured for ethermusic.io " + NETWORK + " the piece will be displayed, but not contributable" );
+            alert( "Network not configured for ethermusic.io (" + NETWORK + ") the piece will be displayed, but not contributable" );
             NETWORK = DEFAULT_NETWORK;
             adr = ADDRESSES[ NETWORK ];
+            HAS_WEB3 = false;
 
         }
 
-        instance = contract.at( adr );
+        ADDRESS = adr;
+
+        instance = contract.at( ADDRESS );
 
         init();
 
         if( err || ! accounts || ! accounts.length ) {
 
-            return alert( "Please login to MetaMask and connect to ropsten test net" );
+            return alert( "Please login to MetaMask and connect to mainnet or ropsten" );
 
         }
 
