@@ -2,7 +2,7 @@
  * Ether sheet music
  */
 
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.21;
 
 
 /**
@@ -167,6 +167,10 @@ contract SheetMusic is OwnableContract {
 
     function createBeat( uint8[] midiNotes, NoteLength length ) external payable {
 
+        totalValue += msg.value;
+        milestoneValue += msg.value;
+
+
         //Check note min value
 
         require( msg.value >= minDonation );
@@ -187,9 +191,6 @@ contract SheetMusic is OwnableContract {
         });
 
         notes[ ++ numNotes ] = newBeat;
-
-        totalValue += msg.value;
-        milestoneValue += msg.value;
 
         emit NoteCreated( msg.sender, numNotes, msg.value );
 
