@@ -17,6 +17,10 @@ i, button {
  * Donation top
  */
 
+#network-section {
+    color: #28a745;
+}
+
 #donation-top {
     float: right;
 }

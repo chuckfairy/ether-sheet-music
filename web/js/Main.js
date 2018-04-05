@@ -57,6 +57,8 @@ window.addEventListener( "load", function() {
 
         ADDRESS = adr;
 
+        NETWORK_NAME = Networks[ NETWORK ] || "Unknown";
+
         instance = contract.at( ADDRESS );
 
         init();

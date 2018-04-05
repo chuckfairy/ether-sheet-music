@@ -7,7 +7,7 @@
 
         <title>Ether Music Project</title>
 
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="viewport" content="width=device-width">
 
         <link href="./css/bootstrap.min.css" rel="stylesheet">
 
@@ -28,6 +28,7 @@
             <div class="pull-right d-none d-lg-block" id="donation-top">
 
                 <p>Your Address : <b id="address-section"></b></p>
+                <p>Network : <b id="network-section"></b></p>
 
                 <div id="donation-bar">
 
@@ -172,6 +173,8 @@ var DEFAULT_NETWORK = "{{ config.default_network }}";
 var Networks = {{ Networks | dump | safe }};
 
 var NETWORK = DEFAULT_NETWORK;
+
+var NETWORK_NAME = "Web3 Not Found";
 
 var ADDRESSES = {{ addresses | dump | safe }};
 

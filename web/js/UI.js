@@ -120,7 +120,8 @@ EM.UI.prototype = {
 
         });
 
-        setTimeout( scope.setupAddressHeader, 250 );
+        setTimeout( scope.setupAddressHeader, 100 );
+        setTimeout( scope.setupNetworkHeader, 100 );
 
         scope.tempoInput.onchange = function() {
 
@@ -148,6 +149,19 @@ EM.UI.prototype = {
             header.innerHTML = "Web3 Not Found";
 
         }
+
+    },
+
+
+    /**
+     * Network header
+     */
+
+    setupNetworkHeader: function() {
+
+        var header = document.getElementById( "network-section" );
+
+        header.innerHTML = NETWORK_NAME;
 
     },
 
