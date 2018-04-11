@@ -401,15 +401,7 @@ EM.Music = function() {
 
     scope.getNetworkEtherscan = function() {
 
-        //Return ropsten default till config setup
-
-        if( ! HAS_WEB3 ) {
-
-            return "ropsten.";
-
-        }
-
-        var net = web3.version.network;
+        var net = NETWORK;
 
         if( net === "1" ) {
 
