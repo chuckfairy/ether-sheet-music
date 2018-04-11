@@ -7,14 +7,18 @@ var Contract = require( "../src/Contract.js" );
 
 var RandomNote = require( "./lib/random-note.js" );
 
-var SheetMusic = new Contract;
+var Config = require( "../src/Config.js" );
+
+var SheetMusic = new Contract( Config.getConfig().default_network );
 
 var web = SheetMusic.getWeb();
 
 var creator = SheetMusic.instance;
 
+const MAIN_ADDRESS = web.eth.accounts[ 0 ];
+
 var trans = {
-    from: web.eth.accounts[ 0 ]
+    from: MAIN_ADDRESS
 };
 
 
@@ -32,6 +36,8 @@ function init() {
         return;
 
     }
+
+    web.personal.unlockAccount( MAIN_ADDRESS, "" );
 
     var milestoneWei =  web.toWei( milestone, "ether" );
 
