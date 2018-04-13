@@ -139,6 +139,11 @@ i, button {
     padding: 2px 5px;
 }
 
+#sheet-music-container {
+    margin: 0 auto;
+    max-width: 70em;
+}
+
 
 /**
  * Create note tab
