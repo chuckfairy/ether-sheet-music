@@ -12,6 +12,20 @@
 
 - basic config for default values in `./config/config.json`
 
+```json
+{
+    "networks": {
+        "5777": {
+            "server": "http://localhost",
+            "port": "8545", //Not required
+            "donatee": "0xADDRESS" //Donation receiver
+        }
+    },
+    "default_network": "5777", //Mainly for testing
+    "web_port": "9090" //Website port
+}
+```
+
 
 ## Eth Private Network
 
@@ -63,7 +77,7 @@ Run
 
 # TODO
 
-- Midi download fix, problem exists in abcjs
+- Midi download fix, problem exists in abcjs for linux
 
 
 ## Maybes

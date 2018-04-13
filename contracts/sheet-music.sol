@@ -2,7 +2,7 @@
  * Ether sheet music
  */
 
-pragma solidity ^0.4.11;
+pragma solidity ^0.4.21;
 
 
 /**
@@ -77,11 +77,11 @@ contract SheetMusic is OwnableContract {
      * Note struct
      */
 
-    struct Note {
+    struct Beat {
 
         address maker;
 
-        uint8 midiNote;
+        uint8[] midiNotes;
 
         NoteLength length;
 
@@ -94,19 +94,35 @@ contract SheetMusic is OwnableContract {
      * Internal props
      */
 
-    mapping( uint => Note ) private notes;
+    mapping( uint => Beat ) private notes;
 
     uint private numNotes;
 
+    address private donatee;
+
+
+    //Values donated toward goal and milestone
+
     uint private totalValue;
+
+    uint private milestoneValue;
+
+
+    //Goals
 
     uint constant DONATION_GOAL = 100 ether;
 
-    uint constant MINIMUM_DONATION = 0.01 ether;
+    uint private minDonation = 0.005 ether;
+
+
+    //Transfer after a certain amount
+
+    uint private milestoneGoal = 5 ether;
+
+
+    //Full donation goal met
 
     bool private donationMet = false;
-
-    mapping( address => string ) private composers;
 
 
     /**
@@ -126,16 +142,22 @@ contract SheetMusic is OwnableContract {
 
     event DonationCreated( address indexed maker, uint donation );
 
+    event DonationTransfered( address donatee, uint value );
+
     event DonationGoalReached( address MrCool );
 
-    event DonationTransfered( address donatee );
+    event MilestoneMet( address donater );
 
 
     /**
      * Construct
      */
 
-    function SheetMusic() public {}
+    function SheetMusic( address donateeArg ) public {
+
+        donatee = donateeArg;
+
+    }
 
 
     /**
@@ -143,30 +165,95 @@ contract SheetMusic is OwnableContract {
      * There is no 0 note. First one is 1
      */
 
-    function createNote( uint8 midiNote, NoteLength length ) external payable {
+    function createBeat( uint8[] midiNotes, NoteLength length ) external payable {
 
-        //Spam check note
+        totalValue += msg.value;
+        milestoneValue += msg.value;
 
-        require( msg.value >= MINIMUM_DONATION );
 
-        require( midiNote >= MIDI_LOWEST_NOTE );
-        require( midiNote <= MIDI_HIGHEST_NOTE );
+        //Check note min value
+
+        require( msg.value >= minDonation );
+
+
+        //Check valid notes
+
+        checkMidiNotesValue( midiNotes );
 
 
         //Create note
 
-        Note memory newNote = Note({
+        Beat memory newBeat = Beat({
             maker: msg.sender,
             donation: msg.value,
-            midiNote: midiNote,
+            midiNotes: midiNotes,
             length: length
         });
 
-        notes[ ++ numNotes ] = newNote;
+        notes[ ++ numNotes ] = newBeat;
+
+        emit NoteCreated( msg.sender, numNotes, msg.value );
+
+        checkGoal( msg.sender );
+
+    }
+
+
+    /**
+     * Create passage or number of beats
+     * Nested array unimplemented right now
+     */
+
+    function createPassage( uint8[] userNotes, uint[] userDivider, NoteLength[] lengths )
+        external
+        payable
+    {
+
+        //Add values regardless if valid
 
         totalValue += msg.value;
+        milestoneValue += msg.value;
 
-        NoteCreated( msg.sender, numNotes, msg.value );
+        uint userNumberBeats = userDivider.length;
+        uint userNumberLength = lengths.length;
+
+
+        //Check note min value and lengths equal eachother
+        //Check valid midi notes
+
+        require( userNumberBeats == userNumberLength );
+
+        require( msg.value >= ( minDonation * userNumberBeats ) );
+
+        checkMidiNotesValue( userNotes );
+
+
+        //Create beats
+
+        uint noteDonation = msg.value / userNumberBeats;
+        uint lastDivider = 0;
+
+        for( uint i = 0; i < userNumberBeats; ++ i ) {
+
+            uint divide = userDivider[ i ];
+            NoteLength length = lengths[ i ];
+
+            uint8[] memory midiNotes = splice( userNotes, lastDivider, divide );
+
+            Beat memory newBeat = Beat({
+                maker: msg.sender,
+                donation: noteDonation,
+                midiNotes: midiNotes,
+                length: length
+            });
+
+            lastDivider = divide;
+
+            notes[ ++ numNotes ] = newBeat;
+
+            emit NoteCreated( msg.sender, numNotes, noteDonation );
+
+        }
 
         checkGoal( msg.sender );
 
@@ -180,6 +267,7 @@ contract SheetMusic is OwnableContract {
     function () external payable {
 
         totalValue += msg.value;
+        milestoneValue += msg.value;
 
         checkGoal( msg.sender );
 
@@ -193,8 +281,9 @@ contract SheetMusic is OwnableContract {
     function donate() external payable {
 
         totalValue += msg.value;
+        milestoneValue += msg.value;
 
-        DonationCreated( msg.sender, msg.value );
+        emit DonationCreated( msg.sender, msg.value );
 
         checkGoal( msg.sender );
 
@@ -211,7 +300,14 @@ contract SheetMusic is OwnableContract {
 
             donationMet = true;
 
-            DonationGoalReached( maker );
+            emit DonationGoalReached( maker );
+
+        }
+
+        if( milestoneValue >= milestoneGoal ) {
+
+            transferMilestone();
+            milestoneValue = 0;
 
         }
 
@@ -222,26 +318,26 @@ contract SheetMusic is OwnableContract {
      * Getters for notes
      */
 
-    function getNumberOfNotes() external view returns ( uint ) {
+    function getNumberOfBeats() external view returns ( uint ) {
 
         return numNotes;
 
     }
 
-    function getNote( uint id ) external view returns (
+    function getBeat( uint id ) external view returns (
         address,
-        uint8,
+        uint8[],
         NoteLength,
         uint
     ) {
 
-        Note storage note = notes[ id ];
+        Beat storage beat = notes[ id ];
 
         return (
-            note.maker,
-            note.midiNote,
-            note.length,
-            note.donation
+            beat.maker,
+            beat.midiNotes,
+            beat.length,
+            beat.donation
         );
 
     }
@@ -254,13 +350,17 @@ contract SheetMusic is OwnableContract {
     function getDonationStats() external view returns (
         uint goal,
         uint minimum,
-        uint currentValue
+        uint currentValue,
+        uint milestoneAmount,
+        address donateeAddr
     ) {
 
         return (
             DONATION_GOAL,
-            MINIMUM_DONATION,
-            totalValue
+            minDonation,
+            totalValue,
+            milestoneGoal,
+            donatee
         );
 
     }
@@ -271,30 +371,94 @@ contract SheetMusic is OwnableContract {
 
     }
 
+    function getDonatee() external view returns( address ) {
+
+        return donatee;
+
+    }
+
 
     /**
      * Finishers
      */
 
-    function transferAll( address toAddress ) onlyOwner external {
+    function transferMilestone() internal {
 
-        toAddress.transfer( this.balance );
+        uint balance = address( this ).balance;
 
-        DonationTransfered( toAddress );
+        donatee.transfer( balance );
 
-    }
-
-    function transfer( address toAddress, uint amount ) onlyOwner external {
-
-        toAddress.transfer( amount );
-
-        DonationTransfered( toAddress );
+        emit DonationTransfered( donatee, balance );
 
     }
 
-    function kill() onlyOwner external {
 
-        selfdestruct( getOwner() );
+    /**
+     * Internal checks and requires for valid notes
+     */
+
+    function checkMidiNoteValue( uint8 midi ) pure internal {
+
+        require( midi >= MIDI_LOWEST_NOTE && midi <= MIDI_HIGHEST_NOTE );
+
+    }
+
+    function checkMidiNotesValue( uint8[] midis ) pure internal {
+
+        uint num = midis.length;
+
+        //require less or equal to all notes allowed
+
+        require( num <= ( MIDI_HIGHEST_NOTE - MIDI_LOWEST_NOTE ) );
+
+        for( uint i = 0; i < num; ++ i ) {
+
+            checkMidiNoteValue( midis[ i ] );
+
+        }
+
+    }
+
+
+    /**
+     * Owner setters for future proofing
+     */
+
+    function setMinDonation( uint newMin ) onlyOwner external {
+
+        minDonation = newMin;
+
+    }
+
+    function setMilestone( uint newMile ) onlyOwner external {
+
+        milestoneGoal = newMile;
+
+    }
+
+
+    /**
+     * Array splice function
+     */
+
+    function splice( uint8[] arr, uint index, uint to )
+        pure
+        internal
+        returns( uint8[] )
+    {
+
+        uint8[] memory output = new uint8[]( to - index );
+        uint counter = 0;
+
+        for( uint i = index; i < to; ++ i ) {
+
+            output[ counter ] = arr[ i ];
+
+            ++ counter;
+
+        }
+
+        return output;
 
     }
 

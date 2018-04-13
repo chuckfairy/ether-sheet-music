@@ -13,21 +13,30 @@ var Config = require( "./Config.js" );
 
 var Web3 = require( "web3" );
 
-var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation() );
-
-var web = new Web3( Web3Provider );
-
-web.eth.defaultAccount = web.eth.accounts[ 0 ];
+var EthNetworks = require( "./EthNetworks.js" );
 
 
-//Contract grabbing
 
-var Contract = function() {
+/**
+ * Contract grabbing
+ */
+
+var Contract = function( network ) {
 
     var scope = this;
 
-    scope.factory = null;
+    scope.network = network;
+    scope.networkName = EthNetworks[ network ] || "unknown";
+
+    var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation( scope.network ) );
+
+    scope.web = new Web3( Web3Provider );
+
     scope.instance = scope.getContract( "sheet-music" );
+
+    scope.loadedNotes = {},
+
+    scope.cacheFile = __dirname + "/../cache/" + scope.instance.address + ".json";
 
 };
 
@@ -41,6 +50,15 @@ Contract.prototype = {
 
     loadedNotes: {},
 
+    cacheFile: "",
+
+    factory: null,
+
+    network: "",
+    networkName: "",
+
+    web: null,
+
 
     /**
      * Main contract grabber
@@ -50,14 +68,22 @@ Contract.prototype = {
 
         var scope = this;
 
-        var interfaceFile = __dirname + "/../build/" + name + "-contract-abi.json";
-        var contractFile = __dirname + "/../build/deployed-" + name + "-contract.txt";
+        var netAdd = scope.network + "-";
+
+        var interfaceFile = __dirname + "/../build/" + netAdd + name + "-contract-abi.json";
+        var contractFile = __dirname + "/../build/" + netAdd + name + "-contract-deployed.txt";
+
+        if( ! FS.existsSync( interfaceFile ) || ! FS.existsSync( contractFile ) ) {
+
+            throw new Error( "Contract not configured for network : " + scope.networkName );
+
+        }
 
         const CODE = JSON.parse( FS.readFileSync( interfaceFile ).toString() );
 
         const ADDR = FS.readFileSync( contractFile ).toString().trim();
 
-        scope.factory = web.eth.contract( CODE );
+        scope.factory = scope.web.eth.contract( CODE );
 
         var contract = scope.factory.at( ADDR );
 
@@ -72,7 +98,8 @@ Contract.prototype = {
 
     getWeb: function() {
 
-        return web;
+        var scope = this;
+        return scope.web;
 
     },
 
@@ -85,9 +112,23 @@ Contract.prototype = {
 
         var scope = this;
 
-        var numNotes = scope.instance.getNumberOfNotes().toNumber();
+        var cacheData = scope.getCache();
 
-        console.log( "Number of notes " +numNotes );
+        if( cacheData ) {
+
+            console.log( "LOADED FROM CACHE : " + scope.networkName );
+
+            scope.loadedNotes = cacheData;
+
+            scope.updateCache( callback );
+
+            return;
+
+        }
+
+        var numNotes = scope.instance.getNumberOfBeats().toNumber();
+
+        console.log( "Number of notes " + numNotes + " : " + scope.networkName );
 
         if( numNotes === 0 ) {
 
@@ -100,7 +141,7 @@ Contract.prototype = {
 
         Async.map( numArray, function( item, itemCallback ) {
 
-            var note = scope.instance.getNote( item );
+            var note = scope.instance.getBeat( item );
 
             scope.loadedNotes[ item ] = note;
 
@@ -109,6 +150,8 @@ Contract.prototype = {
             itemCallback();
 
         }, function() {
+
+            scope.saveCache();
 
             callback();
 
@@ -125,6 +168,16 @@ Contract.prototype = {
 
         createEvent.watch( function( err, response ) {
 
+            if( err ) {
+
+                console.log( err );
+                scope.buildNotes( function() {
+                    scope.dispatch( { type: "note-created" } );
+                });
+                return;
+
+            }
+
             var noteId = response.args.id.toNumber();
 
             //Note already loaded
@@ -135,11 +188,13 @@ Contract.prototype = {
 
             }
 
-            var note = scope.instance.getNote( noteId );
+            var note = scope.instance.getBeat( noteId );
 
             console.log( note );
 
             scope.loadedNotes[ noteId ] = note;
+
+            scope.saveCache();
 
             scope.dispatch( { type: "note-created" } );
 
@@ -150,6 +205,110 @@ Contract.prototype = {
     createRange: function( start, end ) {
 
         return Array(end - start + 1).fill().map((_, idx) => start + idx)
+
+    },
+
+
+
+    /**
+     * Save cache
+     */
+
+    saveCache: function() {
+
+        var scope = this;
+
+        var data = JSON.stringify( scope.loadedNotes );
+
+        FS.writeFile( scope.cacheFile, data, function( err, res ) {
+
+            if( err ) {
+
+                console.log( "ERROR SAVING CACHE", err );
+
+            }
+
+        });
+
+    },
+
+
+    /**
+     * Get cache
+     */
+
+    getCache: function() {
+
+        var scope = this;
+
+        if( ! FS.existsSync( scope.cacheFile ) ) {
+
+            return false;
+
+        }
+
+        var data = FS.readFileSync( scope.cacheFile );
+
+        return JSON.parse( data );
+
+    },
+
+
+    /**
+     * Check for updated changes
+     */
+
+    updateCache: function( callback ) {
+
+        var scope = this;
+
+        console.log( "UPDATING CACHE : " + scope.networkName );
+
+        var numNotes = scope.instance.getNumberOfBeats().toNumber() | 0;
+
+        var loadedKeys = Object.keys( scope.loadedNotes );
+
+        var lastKey = loadedKeys[ loadedKeys.length - 1 ] | 0;
+
+        if( lastKey === numNotes ) {
+
+            callback();
+
+            return;
+
+        }
+
+        if( lastKey > numNotes ) {
+
+            console.log( "WARNING NODE NOT SYNCED OR CACHE IS CORRUPT : " + scope.networkName );
+
+            callback();
+
+            return;
+
+        }
+
+        console.log( lastKey, numNotes );
+
+        var numArray = scope.createRange( lastKey, numNotes );
+
+        Async.map( numArray, function( item, itemCallback ) {
+
+            var note = scope.instance.getBeat( item );
+
+            scope.loadedNotes[ item ] = note;
+
+            console.log( "Loaded note " + item );
+
+            itemCallback();
+
+        }, function() {
+
+            scope.saveCache();
+
+            callback();
+
+        });
 
     }
 

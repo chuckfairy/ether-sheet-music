@@ -14,22 +14,26 @@ EM.Music = function() {
         fromBlock: "latest"
     };
 
-    scope.notesLoaded = typeof( NOTES[ 1 ] ) !== "undefined" ? NOTES : null;
+    scope.lastSharp = {};
 
-    scope.globalStats = GLOBAL_STATS || null;
+    var NET_NOTES = NOTES[ NETWORK ];
+
+    scope.notesLoaded = typeof( NET_NOTES[ 1 ] ) !== "undefined" ? NET_NOTES : null;
+
+    scope.globalStats = GLOBAL_STATS[ NETWORK ] || null;
 
 
     /**
      * Main note creator
      */
 
-    scope.createNote = function( donation, note, noteLength ) {
+    scope.createBeat = function( donation, notes, dividers, noteLengths ) {
 
         var trans = {
             value: web3.toWei( donation, "ether" )
         };
 
-        instance.createNote( note, noteLength, trans, function( err, response ) {
+        function callback( err, response ) {
 
             if( err ) {
 
@@ -42,7 +46,17 @@ EM.Music = function() {
                 data: response
             });
 
-        });
+        }
+
+        if( dividers.length === 1 ) {
+
+            instance.createBeat( notes, noteLengths[ 0 ], trans, callback );
+
+        } else {
+
+            instance.createPassage( notes, dividers, noteLengths, trans, callback );
+
+        }
 
     }
 
@@ -114,7 +128,7 @@ EM.Music = function() {
 
     scope.getComposerStats = function( callback ) {
 
-        instance.getNumberOfNotes( function( err, numNotes ) {
+        instance.getNumberOfBeats( function( err, numNotes ) {
 
             var id = 1;
 
@@ -124,7 +138,7 @@ EM.Music = function() {
 
             async.eachSeries( new Array( numNotes ), function( item, itemCallback ) {
 
-                scope.getNote( id, function( composer ) {
+                scope.getBeat( id, function( composer ) {
 
                     stats.push( composer );
 
@@ -149,7 +163,7 @@ EM.Music = function() {
      * Main get note
      */
 
-    scope.getNote = function( noteId, callback ) {
+    scope.getBeat = function( noteId, callback ) {
 
         if( scope.notesLoaded[ noteId ] ) {
 
@@ -157,7 +171,7 @@ EM.Music = function() {
 
         }
 
-        instance.getNote( noteId, function( err, note ) {
+        instance.getBeat( noteId, function( err, note ) {
 
             var noteData = scope.formatNote( noteId, note );
 
@@ -217,19 +231,16 @@ EM.Music = function() {
 
     scope.formatNote = function( noteId, note ) {
 
-        var midi = note[ 1 ] | 0;
+        var midi = EM.Shim.arrayUnique( note[ 1 ] );
         var length = note[ 2 ] | 0;
 
-        var midiData = Midi.NoteNumber[ midi ] || {};
-
-        var midiABC = scope.convertMidiToABC( midiData.midi, length );
+        var midiABC = scope.convertMidiToABC( midi, length );
         var lengthABC = Midi.ABC.NoteLength[ length ];
 
         var noteData = {
             id: noteId,
             maker: note[ 0 ],
             midi: midi,
-            midiData: midiData,
             abc: {
                 note: midiABC,
             },
@@ -242,19 +253,64 @@ EM.Music = function() {
 
     };
 
-
     /**
      * Conversion to midi / sheet music plugins
      */
 
-    scope.convertMidiToABC = function( midiName, length ) {
+    scope.convertMidiToABC = function( midiNotes, length ) {
 
-        var abc = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
-        var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
-        var sharp = midiName.indexOf( "#" ) !== -1;
+        var abc = scope.convertMidisToABCChord( midiNotes );
 
         var lengthABC = Midi.ABC.NoteLength[ length ];
 
+        abc = abc + lengthABC;
+
+        return abc;
+
+    };
+
+    scope.convertMidisToABCChord = function( midiNotes ) {
+
+        var out = [];
+
+        var ml = midiNotes.length;
+
+        if( ml === 0 ) {
+
+            return "z";
+
+        }
+
+        for( var i = 0; i < ml; ++ i ) {
+
+            midiNotes[ i ] = midiNotes[ i ] | 0;
+
+        }
+
+        for( var i = 0; i < ml; ++ i ) {
+
+            var note = midiNotes[ i ];
+
+            var abc = scope.convertMidiToABCNote( note, midiNotes );
+
+            out.push( abc );
+
+        }
+
+        return "[" + out.join( "" ) + "]";
+
+    }
+
+    scope.convertMidiToABCNote = function( midi, fromChord ) {
+
+        var midiName = Midi.NoteNumber[ midi ];
+        midiName = midiName.midi;
+
+        var midiLetter = midiName.replace( /(\w)\#?(\d+)/, "\$1" );
+        var midiNumber = midiName.replace( /.*?(\d+)/, "\$1" ) | 0;
+        var sharp = midiName.indexOf( "#" ) !== -1;
+
+        var abc = midiLetter;
 
         //Uppercase if over middle 4
         var lowerCase = midiNumber > 4;
@@ -277,11 +333,64 @@ EM.Music = function() {
 
             abc = "^" + abc;
 
+        } else {
+
+            //Natural note explicit
+
+            var nextMidiNum = midi + 1;
+            var nextMidi = Midi.NoteNumber[ nextMidiNum ];
+
+            //Check if played prior
+
+            if( nextMidi ) {
+
+                var nextMidiName = nextMidi.midi.replace( /(\w)\#?(\d+)/, "\$1" );
+
+                if( nextMidiName === midiLetter && !! scope.lastSharp[ nextMidiNum ] ) {
+
+                    scope.lastSharp[ nextMidiNum ] = false;
+                    abc = "=" + abc;
+
+                }
+
+                //Check if sharp in chord
+
+                else if ( fromChord.indexOf( nextMidi ) !== -1 ) {
+
+                    abc = "=" + abc;
+
+                }
+
+            }
+
         }
 
-        abc = abc + lengthABC;
+        scope.lastSharp[ midi ] = true;
 
         return abc;
+
+    };
+
+
+    /**
+     * Convert array to ABC
+     */
+
+    scope.convertArrayToABC = function( arr ) {
+
+        var al = arr.length;
+
+        var output = "";
+
+        for( var i = 0; i < al; ++ i ) {
+
+            var beat = arr[ i ];
+
+            output += scope.convertMidiToABC( beat.notes, beat.length );
+
+        }
+
+        return output;
 
     };
 
@@ -292,15 +401,7 @@ EM.Music = function() {
 
     scope.getNetworkEtherscan = function() {
 
-        //Return ropsten default till config setup
-
-        if( ! HAS_WEB3 ) {
-
-            return "ropsten.";
-
-        }
-
-        var net = web3.version.network;
+        var net = NETWORK;
 
         if( net === "1" ) {
 
@@ -319,6 +420,11 @@ EM.Music = function() {
         return "";
 
     };
+
+
+    /**
+     * etherscan url grabber
+     */
 
     scope.getTransactionUrl = function( txHash ) {
 

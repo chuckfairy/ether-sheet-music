@@ -8,10 +8,18 @@ body {
     width: 60px;
 }
 
+i, button {
+    cursor: pointer;
+}
+
 
 /**
  * Donation top
  */
+
+#network-section {
+    color: #28a745;
+}
 
 #donation-top {
     float: right;
@@ -49,14 +57,23 @@ body {
  * Nav
  */
 
-.nav-item {
+#main-nav {
+    border-bottom: 7px solid #3E1B5C;
+}
+
+#main-nav .nav-item, #main-nav .nav-item-end {
     border-radius: 2px 2px 0 0;
     border: 1px solid #000;
     margin-right: 2px;
     position: relative;
+    min-width: 50px;
 }
 
-.nav-item::after {
+.nav-item-end {
+    top: 1px;
+}
+
+#main-nav .nav-item::after {
     width: 20px;
     height: 50px;
     display: block;
@@ -69,8 +86,14 @@ body {
     border-radius: 2px 2px 0 0;
 }
 
-.nav-item > a {
+#main-nav .nav-item > a {
     padding-top: 38px;
+}
+
+#main-nav .nav-bottom {
+    height: 10px;
+    width: 100%;
+    border-radius: 0 5px 5px 5px;
 }
 
 
@@ -78,8 +101,13 @@ body {
  * UI
  */
 
+#music-piece-bpm {
+    width: 10em;
+    display: inline;
+}
+
 #message-area {
-    position: absolute;
+    position: fixed;
     top: 10px;
     right: 10px;
     z-index: 1000;
@@ -96,6 +124,26 @@ body {
 .tab-content {
     padding-top: 10px;
 }
+
+.rainbow-gradient {
+    height: 200px;
+    background: red;
+    background: -webkit-linear-gradient(left, red, orange , yellow, green, cyan, blue, violet);
+    background: -o-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
+    background: -moz-linear-gradient(right, red, orange, yellow, green, cyan, blue, violet);
+    background: linear-gradient(to right, red, orange , yellow, green, cyan, blue, violet);
+}
+
+.close-btn, .close-note-btn {
+    font-size: .8em;
+    padding: 2px 5px;
+}
+
+#sheet-music-container {
+    margin: 0 auto;
+    max-width: 70em;
+}
+
 
 /**
  * Create note tab
@@ -122,12 +170,77 @@ body {
     text-align: center;
 }
 
-#create-note-form > .row {
+#note-picker-area {
+    margin-bottom: 10px;
+}
+
+.note-picker-beat {
+    padding: 10px;
+    border: 1px solid #999;
+    margin-bottom: 10px;
+}
+
+.note-picker-note {
+    border-left: 5px solid #4444FF;
+    padding: 10px;
+    background: #EEE;
+    margin-bottom: 10px;
+}
+
+#create-note-form .row {
     margin-bottom: 10px;
 }
 
 #music-changed-alert, #music-note-created {
     display: none;
+}
+
+
+/**
+ * Sequencer UI
+ */
+
+#sequencer-area {
+    padding: 10px 0;
+}
+
+.sequencer-beat {
+    width: 10em;
+    float: left;
+    margin-right: 10px;
+}
+
+.sequencer-notes {
+    overflow-y: scroll;
+    height: 20em;
+}
+
+.sequencer-black {
+    background: #000;
+    color: #FFF;
+}
+
+.sequencer-white {
+    background: #FFF;
+    color: #000;
+}
+
+.sequencer-note, .sequencer-note-active {
+    padding: 10px;
+    width: 120px;
+    cursor: pointer;
+    border-bottom: solid 1px #AAA;
+    border-left: solid 1px #AAA;
+    border-right: solid 1px #AAA;
+}
+
+.sequencer-note-active {
+    background: #FF0000 !important;
+    color: #FFF !important;
+}
+
+.sequencer-note:hover, .sequencer-note-active:hover {
+    background: #AAA !important;
 }
 
 
@@ -143,6 +256,11 @@ body {
 
 .composer-data p {
     margin: 0;
+}
+
+.composer-midi-data {
+    width: 100%;
+    overflow-x: auto;
 }
 
 

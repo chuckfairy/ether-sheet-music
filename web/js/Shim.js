@@ -51,6 +51,29 @@ EM.Shim = {
 
         return vals;
 
+    },
+
+
+    /**
+     * Unique array
+     */
+
+    arrayUnique: function( arr ) {
+
+        if( typeof( Set ) !== "undefined" && Array.from ) {
+
+            return Array.from( new Set( arr ) );
+
+        }
+
+        return arr.reduce(function(p, c) {
+
+            if (p.indexOf(c) < 0) p.push(c);
+
+            return p;
+
+        }, []);
+
     }
 
 };

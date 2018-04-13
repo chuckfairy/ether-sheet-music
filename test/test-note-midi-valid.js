@@ -5,7 +5,9 @@
 
 var Contract = require( "../src/Contract.js" );
 
-var SheetMusic = new Contract;
+var Config = require( "../src/Config.js" );
+
+var SheetMusic = new Contract( Config.getConfig().default_network );
 
 var web = SheetMusic.getWeb();
 
@@ -24,7 +26,7 @@ describe("MIDI Valid", function() {
 
         this.timeout( 6000 );
 
-        var startingNotes = Instance.getNumberOfNotes();
+        var startingNotes = Instance.getNumberOfBeats();
         startingNotes = startingNotes.toNumber();
 
         var trans = {
@@ -33,12 +35,12 @@ describe("MIDI Valid", function() {
             gas: 3000000
         };
 
-        Instance.createNote( 1, 1, trans, function( err, result ) {
+        Instance.createBeat( [ 1 ], 1, trans, function( err, result ) {
 
             //Value will still be transfered no way around
             //Check if no note was created
 
-            assert.equal( Instance.getNumberOfNotes().toNumber(), startingNotes );
+            assert.equal( Instance.getNumberOfBeats().toNumber(), startingNotes );
 
             done();
 

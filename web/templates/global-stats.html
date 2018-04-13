@@ -1,18 +1,33 @@
 <table class="table table-bordered">
 
     <tr>
-        <td>Donation Goal</td>
+        <th>Contract</th>
+        <td><a href="https://{{ network }}etherscan.io/address/{{ address }}" target="_blank">{{ address }}</a></td>
+    </tr>
+
+    <tr>
+        <th>Donation Goal</th>
         <td>{{ stats.goal }} ETH</td>
     </tr>
 
     <tr>
-        <td>Minimum</td>
+        <th>Minimum</th>
         <td>{{ stats.min }} ETH</td>
     </tr>
 
     <tr>
-        <td>Total Raised</td>
+        <th>Total Raised</th>
         <td>{{ stats.current }} ETH</td>
+    </tr>
+
+    <tr>
+        <th>Milestone Goal</th>
+        <td>{{ stats.milestone }} ETH</td>
+    </tr>
+
+    <tr>
+        <th>Donatee</th>
+        <td><a href="https://{{ network }}etherscan.io/address/{{ stats.donatee }}" target="_blank">{{ stats.donatee }}</a></td>
     </tr>
 
 </table>

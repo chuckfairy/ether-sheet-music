@@ -12,6 +12,17 @@ EM.UI = function( music ) {
 
     scope.Music = music;
 
+    scope.NotePicker = new EM.NotePicker();
+    scope.Sequencer = new EM.Sequencer();
+
+    scope.NotePicker.setRequired( false );
+    scope.Sequencer.setRequired( true );
+
+
+    //Default to note picker
+
+    scope.currentEditor = scope.Sequencer;
+
     scope.init();
 
 };
@@ -23,6 +34,10 @@ EM.UI.prototype = {
      */
 
     Music: null,
+    NotePicker: null,
+    Sequencer: null,
+
+    currentEditor: null,
 
     templater: null,
 
@@ -53,6 +68,9 @@ EM.UI.prototype = {
 
     newNoteCreated: false,
 
+    tempoId: "music-piece-bpm",
+    tempoInput: null,
+
 
     /**
      * Main
@@ -67,9 +85,11 @@ EM.UI.prototype = {
         scope.composersDom = document.getElementById( scope.composersId );
         scope.messagesDom = document.getElementById( scope.messagesId );
 
+        scope.tempoInput = document.getElementById( scope.tempoId );
+
         scope.createForm = document.getElementById( scope.createFormId );
 
-        scope.setupCreateForm();
+        setTimeout( function() { scope.setupCreateForm(); }, 50 );
 
         scope.templater = new Templater({
             templates: scope.templates
@@ -100,7 +120,14 @@ EM.UI.prototype = {
 
         });
 
-        setTimeout( scope.setupAddressHeader, 250 );
+        setTimeout( scope.setupAddressHeader, 100 );
+        setTimeout( scope.setupNetworkHeader, 100 );
+
+        scope.tempoInput.onchange = function() {
+
+            scope.renderPiece();
+
+        };
 
     },
 
@@ -127,6 +154,19 @@ EM.UI.prototype = {
 
 
     /**
+     * Network header
+     */
+
+    setupNetworkHeader: function() {
+
+        var header = document.getElementById( "network-section" );
+
+        header.innerHTML = NETWORK_NAME;
+
+    },
+
+
+    /**
      * Stats global setup
      */
 
@@ -136,7 +176,7 @@ EM.UI.prototype = {
 
         scope.Music.getStats( function( stats ) {
 
-            scope.setFormMinimum();
+            scope.setFormMinimum( 1 );
             scope.updateDonationStats();
 
         });
@@ -156,7 +196,7 @@ EM.UI.prototype = {
 
             composers = EM.Shim.getValues( composers );
 
-            scope.renderPiece( composers );
+            scope.renderPiece();
 
             scope.composersDom.innerHTML = "";
 
@@ -183,6 +223,11 @@ EM.UI.prototype = {
         if( ! HAS_WEB3 ) { return; }
 
 
+        //Editor change
+
+        scope.setEditorChangeEvents();
+
+
         //Remove disable
 
         var disabledDiv = document.getElementById( "create-form-disabled" );
@@ -192,10 +237,6 @@ EM.UI.prototype = {
         //Create form
 
         var donation = document.getElementById( "donation" );
-        var noteNumber = document.getElementById( "note-midi" );
-        var noteLength = document.getElementById( "note-length" );
-
-        var creatorView = document.getElementById( "note-creator-view" );
 
 
         //Main submit
@@ -204,59 +245,115 @@ EM.UI.prototype = {
 
             e.preventDefault();
 
+            var args = scope.currentEditor.getArgs();
+
+            if( ! args[ 2 ].length ) {
+
+                return alert( "No beats created. Please add some music before submitting" );
+
+            }
+
+
             //Launch contract call
 
-            scope.Music.createNote(
+            scope.Music.createBeat(
                 donation.value,
-                noteNumber.value,
-                noteLength.value
+                args[ 0 ],
+                args[ 1 ],
+                args[ 2 ]
             );
 
         };
 
-        noteNumber.onchange = updateCreatorView;
-        noteLength.onchange = updateCreatorView;
         updateCreatorView();
 
         function updateCreatorView() {
 
-            checkRandom( noteNumber );
-            checkRandom( noteLength );
-
-            if( noteNumber.value === "" || noteLength.value === "" ) {
-
-                creatorView.innerHTML = "";
-                return;
-
-            }
-
-            var note = scope.Music.convertMidiToABC(
-                Midi.NoteNumber[ noteNumber.value|0 ].midi,
-                noteLength.value|0
-            );
-
-            var abc = "L: 1/32\n" +
-                ":" + note;
-
-            ABCJS.renderAbc( creatorView, abc );
+            scope.updateCreatorView();
 
         }
 
-        function checkRandom( input ) {
+        //Events
 
-            if( input.value !== "random" ) {
+        scope.NotePicker.on( "change", updateCreatorView );
+        scope.Sequencer.on( "change", updateCreatorView );
 
-                return;
+    },
 
-            }
 
-            var opts = input.options.length - 2;
 
-            var index = Math.floor( ( Math.random() * opts ) + 2 );
+    /**
+     * Current editor change
+     */
 
-            input.selectedIndex = index;
+    setEditorChangeEvents: function() {
+
+        var scope = this;
+
+        var notePickerBtn = document.getElementById( "note-picker-tab" );
+        var sequencerBtn = document.getElementById( "sequencer-tab" );
+
+        notePickerBtn.addEventListener( "click", function() {
+
+            scope.currentEditor = scope.NotePicker;
+
+            scope.NotePicker.setRequired( true );
+            scope.Sequencer.setRequired( false );
+
+            scope.updateCreatorView();
+
+        });
+
+        sequencerBtn.addEventListener( "click", function() {
+
+            scope.currentEditor = scope.Sequencer;
+
+            scope.Sequencer.setRequired( true );
+            scope.NotePicker.setRequired( false );
+
+            scope.updateCreatorView();
+
+        });
+
+    },
+
+
+    /**
+     * Creator view render
+     */
+
+    updateCreatorView: function() {
+
+        var scope = this;
+
+        var creatorView = document.getElementById( "note-creator-view" );
+        var listenView = document.getElementById( "note-creator-listen" );
+
+        var beats = scope.currentEditor.getABC();
+
+        scope.setFormMinimum( beats.length || 1 );
+
+        if( ! beats || ! beats.length ) {
+
+            creatorView.innerHTML = "";
+            return;
 
         }
+
+        var abc = scope.Music.convertArrayToABC( beats );
+        abc = "X: 1\n" +
+            "K: C\n" +
+            "L: 1/32\n" +
+            ":" + abc;
+
+        var midiOpts = {
+            inlineControls: {
+                startPlaying: true
+            }
+        };
+
+        ABCJS.renderAbc( creatorView, abc );
+        var midiRender = ABCJS.renderMidi( listenView, abc, midiOpts, midiOpts );
 
     },
 
@@ -279,13 +376,11 @@ EM.UI.prototype = {
 
         }
 
-        scope.Music.getNote( id, function( note ) {
+        scope.Music.getBeat( id, function( note ) {
 
             scope.renderComposerNotes( [ note ] );
 
-            scope.renderPiece(
-                EM.Shim.getValues( scope.Music.notesLoaded )
-            );
+            scope.renderPiece();
 
         });
 
@@ -298,7 +393,7 @@ EM.UI.prototype = {
      * Stats
      */
 
-    setFormMinimum: function() {
+    setFormMinimum: function( beats ) {
 
         var scope = this;
 
@@ -307,10 +402,10 @@ EM.UI.prototype = {
 
         //Create form min
         var minArea = document.getElementById( "donation-min-form" );
-        minArea.innerHTML = min;
+        minArea.innerHTML = min * beats;
 
         var donationInput = document.getElementById( "donation" );
-        donationInput.setAttribute( "min", min );
+        donationInput.setAttribute( "min", min * beats );
 
     },
 
@@ -323,7 +418,8 @@ EM.UI.prototype = {
 
         var scope = this;
 
-        scope.createForm.reset();
+        var donation = document.getElementById( "donation" );
+        donation.value = "";
 
         scope.setMessage( "You created a note!" );
 
@@ -352,7 +448,9 @@ EM.UI.prototype = {
         var goal = scope.Music.globalStats.goal;
 
         var vars = {
-            stats: scope.Music.globalStats
+            stats: scope.Music.globalStats,
+            network: scope.Music.getNetworkEtherscan(),
+            address: ADDRESS
         };
 
         scope.templater.render( "global-stats.html", vars, function( template ) {
@@ -361,8 +459,10 @@ EM.UI.prototype = {
 
         });
 
-        var percentRaised = Math.ceil( ( current / goal ) * 10000 );
+        var percentRaised = Math.floor( ( current / goal ) * 10000 );
         percentRaised = percentRaised * .01;
+        percentRaised = percentRaised.toFixed( 2 );
+
         var donationRaisedDiv = document.getElementById( "donation-top-raised" );
         donationRaisedDiv.innerHTML = percentRaised + "% Raised";
 
@@ -376,12 +476,15 @@ EM.UI.prototype = {
      * Render the piece
      */
 
-    renderPiece: function( notes ) {
+    renderPiece: function() {
 
         var scope = this;
 
+        var notes = EM.Shim.getValues( scope.Music.notesLoaded );
+
         var vars = {
-            notes: notes
+            notes: notes,
+            tempo: scope.tempoInput.value | 0
         };
 
         scope.templater.render( "abc-piece.html", vars, function( template ) {
@@ -390,7 +493,13 @@ EM.UI.prototype = {
 
             var pieceOpts = { responsive: "resize" };
 
-            ABCJS.renderAbc( scope.pieceId, template, pieceOpts, pieceOpts, pieceOpts );
+            ABCJS.renderAbc(
+                scope.pieceId,
+                template,
+                pieceOpts,
+                pieceOpts,
+                pieceOpts
+            );
 
 
             //Midi setup
@@ -400,8 +509,8 @@ EM.UI.prototype = {
                 generateInline: false
             };
 
-			ABCJS.renderMidi( scope.pieceMidiPlayId, template );
-			ABCJS.renderMidi(
+            ABCJS.renderMidi( scope.pieceMidiPlayId, template );
+            ABCJS.renderMidi(
                 scope.pieceMidiDownloadId,
                 template,
                 {},
@@ -459,9 +568,7 @@ EM.UI.prototype = {
         var width = 150;
         var height = 300;
 
-        for( var i = 0; i < nl; ++ i ) {
-
-            var note = notes[ i ];
+        async.mapSeries( notes, function( note, callback ) {
 
             var abc = note.getAttribute( "data-note" );
 
@@ -469,7 +576,9 @@ EM.UI.prototype = {
 
             note.className = "";
 
-        }
+            setTimeout( callback, 50 );
+
+        });
 
     },
 

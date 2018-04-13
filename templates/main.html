@@ -7,7 +7,7 @@
 
         <title>Ether Music Project</title>
 
-        <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0">
+        <meta name="viewport" content="width=device-width">
 
         <link href="./css/bootstrap.min.css" rel="stylesheet">
 
@@ -28,6 +28,7 @@
             <div class="pull-right d-none d-lg-block" id="donation-top">
 
                 <p>Your Address : <b id="address-section"></b></p>
+                <p>Network : <b id="network-section"></b></p>
 
                 <div id="donation-bar">
 
@@ -43,25 +44,32 @@
 
         </div>
 
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <div id="main-nav">
 
-            <li class="nav-item">
-                <a class="nav-link active" id="music-view-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
-            </li>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
 
-            <li class="nav-item">
-                <a class="nav-link" id="music-create-tab" data-toggle="tab" href="#music-create" role="tab">Create a Note</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="music-view-tab" data-toggle="tab" href="#music-main" role="tab">Music</a>
+                </li>
 
-            <li class="nav-item">
-                <a class="nav-link" id="games-completed-tab" data-toggle="tab" href="#music-stats" role="tab">Stats</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="music-create-tab" data-toggle="tab" href="#music-create" role="tab">Create</a>
+                </li>
 
-            <li class="nav-item">
-                <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab">About</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="games-completed-tab" data-toggle="tab" href="#music-stats" role="tab">Stats</a>
+                </li>
 
-        </ul>
+                <li class="nav-item">
+                    <a class="nav-link" id="about-tab" data-toggle="tab" href="#about" role="tab">About</a>
+                </li>
+
+                <li class="nav-item-end">
+                </li>
+
+            </ul>
+
+        </div>
 
         <div class="tab-content" id="myTabContent">
 
@@ -69,24 +77,29 @@
 
                 <h2>What is this?</h2>
 
-                <p>This is a project that utilizes Ethereum smart contracts to create a piece of music that anyone with ether can contribute too. The question we wish to answer? Can the internet come as one to create a piece of art. Please install <a href="https://metamask.io/" target="_blank">MetaMask</a> or the Mist browser to view and contribute to the piece! Since this is still in alpha, point your MetaMask to the Ropsten test network to start testing.</p>
+                <p>This is a fun project that utilizes Ethereum smart contracts to create a piece of music that anyone with ether can contribute too. The question we wish to answer? Can the internet come as one to create a piece of art. All funds raised in the piece will go to the <a href="https://etherscan.io/address/0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359" target="_blank">Ethereum Foundation Tip Jar</a>. After every milestone is hit (see Stats page), the contract will send it's current balance to the donatee.</p>
+
+                <p>Please install <a href="https://metamask.io/" target="_blank">MetaMask</a> or the <a href="https://github.com/ethereum/mist" target="_blank">Mist browser</a> to view and contribute to the piece! If you wish to test out this contract before donating, please point your web3 network to <b><i>Ropsten</i></b> and you will be taken to the testing piece.</p>
 
                 <p> All code is available here <a href="http://github.com/chuckfairy/ether-sheet-music" target="_blank">http://github.com/chuckfairy/ether-sheet-music</a>. If you would like to see other cool projects like this, consider sending us funds at <a href="http://etherscan.io/address/0x102f96e5c6805924e8b21a60b4fa6834bdbb8975" target="_blank">0x102f96e5c6805924e8b21a60b4fa6834bdbb8975</a>. View the About tab for more coin options.</p>
 
                 <br>
 
-                <h2>Hear the Piece</h2>
+                <h2>Hear the Piece <i class="fa fa-info-circle" data-trigger="hover" data-toggle="tooltip" title="* If this fails to play, try to play it twice"></i></h2>
+
+                <p>BPM <input type="number" id="music-piece-bpm" class="form-control" value="180"></p>
 
                 <div id="music-piece-midi">
                     <img class="loader-img" src="./assets/loader.gif">
                 </div>
+
                 <div id="music-piece-midi-download"></div>
 
                 <br>
 
                 <h2>See the Piece</h2>
 
-                <div class="container" style="margin: 0 auto;">
+                <div id="sheet-music-container">
                     <div id="music-piece" >
                         <img class="loader-img" src="./assets/loader.gif">
                     </div>
@@ -102,7 +115,7 @@
 
             <div class="tab-pane fade" id="music-stats" role="tabpanel">
 
-                <h2>Global Stats</h2>
+                <h2>Project Stats</h2>
 
                 <div id="global-stats">
                     <img class="loader-img" src="./assets/loader.gif">
@@ -125,7 +138,7 @@
         </div>
 
         <script src="./js/lib/jquery.min.js"></script>
-
+        <script src="./js/lib/popper.min.js"></script>
         <script src="./js/lib/bootstrap.min.js"></script>
 
         <script src="./js/lib/nunjucks.min.js"></script>
@@ -145,8 +158,6 @@
 
 var abi = {{ abi | safe }};
 
-var ADDRESS = "{{ contract.address }}";
-
 var GAS_PRICE;
 
 
@@ -157,7 +168,17 @@ var contract, instance;
 
 //Network data
 
+var DEFAULT_NETWORK = "{{ config.default_network }}";
+
 var Networks = {{ Networks | dump | safe }};
+
+var NETWORK = DEFAULT_NETWORK;
+
+var NETWORK_NAME = "Web3 Not Found";
+
+var ADDRESSES = {{ addresses | dump | safe }};
+
+var ADDRESS = ADDRESSES[ DEFAULT_NETWORK ];
 
 
 //Midi data dump from node
@@ -172,7 +193,7 @@ var NOTES = {{ notes | dump | safe }};
 
 //Stats Cache
 
-var GLOBAL_STATS = {{ globalStats | dump | safe }};
+var GLOBAL_STATS = {{ stats | dump | safe }};
 
 
 //Has web3
@@ -184,7 +205,12 @@ var HAS_WEB3 = typeof( web3 ) !== "undefined";
         <script src="./js/Namespace.js"></script>
         <script src="./js/Shim.js"></script>
         <script src="./js/Music.js"></script>
+
+        <script src="./js/EditorHelper.js"></script>
+        <script src="./js/NotePicker.js"></script>
+        <script src="./js/Sequencer.js"></script>
         <script src="./js/UI.js"></script>
+
         <script src="./js/Main.js"></script>
 
     </body>

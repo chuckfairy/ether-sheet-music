@@ -1,6 +1,6 @@
-<h2>Create A Note</h2>
-
 <form id="create-note-form">
+
+    <p><i><b>Create what your heart desires</b></i></p>
 
     <div id="create-form-disabled" class="alert alert-danger">
         <p>Please install MetaMask or use a Web3 enabled browser to contribute to the piece</p>
@@ -9,7 +9,7 @@
     <div class="row">
 
         <div class="col-md-3">
-            <p>Donation (ether MIN <b id="donation-min-form"></b>)</p>
+            <p>Donation (ether MIN <b id="donation-min-form"></b>) <i class="fa fa-info-circle" data-trigger="hover" data-toggle="tooltip" title="* Donation minimum is per beat not per note"></i></p>
         </div>
 
         <div class="col-md-9">
@@ -18,52 +18,26 @@
 
     </div>
 
-    <div class="row">
+    <ul class="nav nav-tabs" id="creator-tabs" role="tablist">
 
-        <div class="col-md-3">
-            <p>Note</p>
+        <li class="nav-item">
+            <a class="nav-link active" id="sequencer-tab" data-toggle="tab" href="#sequencer-content" role="tab">Sequencer</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" id="note-picker-tab" data-toggle="tab" href="#note-picker-content" role="tab">Note Picker</a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content">
+
+        <div class="tab-pane fade" id="note-picker-content">
+            {% include "note-picker.html" %}
         </div>
 
-        <div class="col-md-9">
-
-            <select name="note" class="form-control" id="note-midi" required>
-
-                <option value="">Pick a Note!</option>
-                <option value="random">Random (why not?)</option>
-
-                {% for note, data in Midi.NoteNumber %}
-
-                <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
-
-                {% endfor %}
-
-            </select>
-
-        </div>
-
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-3">
-            <p>Note Length</p>
-        </div>
-
-        <div class="col-md-9">
-
-            <select name="note-length" class="form-control" id="note-length" required>
-
-                <option value="">Pick a Length!</option>
-                <option value="random">Random (why not?)</option>
-
-                {% for length, name in Midi.NoteLength %}
-
-                <option value="{{ length }}">{{ name }}</option>
-
-                {% endfor %}
-
-            </select>
-
+        <div class="tab-pane fade show active" id="sequencer-content">
+            {% include "sequencer.html" %}
         </div>
 
     </div>
@@ -72,13 +46,17 @@
 
         <div class="col-md-12">
 
+            <h2>Hearing is Believing</h2>
+
+            <div id="note-creator-listen"></div>
+
             <div id="note-creator-view"></div>
 
             <div id="music-changed-alert" class="alert alert-danger">The piece has changed since you have entered. Make sure to check the music tab if this matters.</div>
 
             <div id="music-note-created" class="alert alert-success"></div>
 
-            <button type="submit" class="btn btn-success btn-block">Create Note</button>
+            <button type="submit" class="btn btn-success btn-block">Create Your Donation</button>
         </div>
 
     </div>

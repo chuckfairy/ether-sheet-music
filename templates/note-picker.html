@@ -1,0 +1,79 @@
+<div id="note-picker-area">
+
+    <div class="note-picker-beat" id="note-picker-beat">
+
+        <div class="row">
+
+            <div class="col-md-3">
+                <p>Note(s) Length</p>
+            </div>
+
+            <div class="col-md-7">
+
+                <select name="note-length" class="form-control" id="note-length" required>
+
+                    <option value="">Pick a Length!</option>
+                    <option value="random">Random (why not?)</option>
+
+                    {% for length, name in Midi.NoteLength %}
+
+                    <option value="{{ length }}">{{ name }}</option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button type="button" class="btn btn-danger pull-right close-btn"><i class="fa fa-times"></i></button>
+
+            </div>
+
+        </div>
+
+        <div class="note-picker-note-area">
+
+            <div class="note-picker-note" id="note-picker-note">
+
+                <div class="row">
+
+                    <div class="col-md-3">
+                        <p>Note &nbsp;&nbsp;<button type="button" class="btn btn-danger close-note-btn"><i class="fa fa-times"></i></button></p>
+                    </div>
+
+                    <div class="col-md-9">
+
+                        <select name="note" class="form-control" id="note-midi">
+
+                            <option value="">Pick a note or leave blank for rest</option>
+                            <option value="random">Random (why not?)</option>
+
+                            {% for note, data in Midi.NoteNumber %}
+
+                            <option value="{{ note }}">Midi {{ data.midi }} (#{{ note }})</option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <button type="button" class="btn btn-info note-picker-add-note">+ Add a Note to the Chord</button>
+
+    </div>
+
+</div>
+
+<hr>
+
+<button type="button" class="btn btn-info" id="note-picker-add-beat">Add a Beat</button>
+
+<hr>

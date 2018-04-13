@@ -1,0 +1,62 @@
+{% set colors = [ "#E82A0C", "#FF8E01", "#FFDC0C", "#BFE804", "#29FF09", "#03E8A5", "#04FEFF", "#009FFF", "#006EFF",  "#400CE8", "#85008F", "#FF00F6"] %}
+
+<div id="sequencer-area">
+
+    <div class="pull-right">
+            <button type="button" class="btn btn-success" id="sequencer-add-beat">+ Add a Beat</button>
+    </div>
+
+{% set counter = 0 %}
+
+    <div class="sequencer-beat" id="sequencer-beat">
+
+        <button type="button" class="btn btn-danger pull-right close-btn"><i class="fa fa-times"></i></button>
+
+        <h5>Beat Length</h5>
+
+        <select name="note-length" class="form-control" required>
+
+            <option value="">Pick a Length!</option>
+            <option value="random">Random (why not?)</option>
+
+            {% for length, name in Midi.NoteLength %}
+
+            <option value="{{ length }}">{{ name }}</option>
+
+            {% endfor %}
+
+        </select>
+
+        <br>
+
+        <div class="sequencer-notes" id="sequencer-notes">
+
+    {% for note in Midi.SequenceOrder %}
+
+        {% if counter == 12 %}
+            {% set counter = 0 %}
+        {% endif %}
+
+        {% if note.midi.indexOf( "#" ) === -1  %}
+            {% set noteClass = "sequencer-white"  %}
+        {% else %}
+            {% set noteClass = "sequencer-black"  %}
+        {% endif %}
+
+        <div class="sequencer-note {{ noteClass }}" data-class="{{ noteClass }}" data-id="{{ note.id }}">
+            {{ note.midi }} ({{ note.id }})
+        </div>
+
+        {% set counter = counter + 1 %}
+
+    {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<br style="clear: both">
+
+<hr style="clear: both">

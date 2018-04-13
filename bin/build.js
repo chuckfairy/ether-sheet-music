@@ -2,25 +2,48 @@
 
 var FS = require( "fs" );
 
+
+//Build arg
+
+var NETWORK = process.argv[ 2 ] || false;
+var PASS = typeof( process.argv[ 3 ] ) === "undefined" ? false : process.argv[ 3 ];
+
+if( ! NETWORK ) {
+
+    throw new Error( "No Network Arg Passed" );
+
+}
+
+var BUILD_NAME = NETWORK + "-";
+
+
 //Eth depends
 
 var Config = require( "../src/Config.js" );
 
+var NetworkConfig = Config.getNetworkConfig( NETWORK );
+
 var Web3 = require( "web3" );
 
-var Web3Provider = new Web3.providers.HttpProvider( Config.getEthLocation() );
+var Web3Provider = new Web3.providers.HttpProvider(
+    Config.getEthLocation( NETWORK )
+);
 
 var web = new Web3( Web3Provider );
 
 var Solc = require( "solc" );
 
-var BUILD_NAME = process.argv[ 2 ] ? process.argv[ 2 ] + "-" : "";
-
 
 const MAIN_ADDRESS = web.eth.accounts[ 0 ];
-//web.personal.unlockAccount( MAIN_ADDRESS, "" );
 
-//console.log( MAIN_ADDRESS, web.eth.getBalance( MAIN_ADDRESS ).toNumber() );
+
+//Unlock is provided or needed
+
+if( PASS ) {
+
+    web.personal.unlockAccount( MAIN_ADDRESS, PASS );
+
+}
 
 
 //Code
@@ -56,13 +79,19 @@ if( compiled.contracts[ ":SheetMusic" ] ) {
 
 function compile( contract, name ) {
 
+    if( ! NetworkConfig.donatee ) {
+
+        throw new Error( "Network config does not have donatee address " + NETWORK );
+
+    }
+
     var interfaceFileName = BUILD_NAME + name + "-contract-abi";
     var contractFileName = BUILD_NAME + name + "-contract";
 
     var interfaceFile = __dirname + "/../build/" + interfaceFileName + ".json";
     var interfaceHistoryFile = __dirname + "/../build/history/" + interfaceFileName + Date.now() + ".json";
-    var contractFile = __dirname + "/../build/deployed-" + contractFileName + ".txt";
-    var contractHistoryFile = __dirname + "/../build/history/deployed-" + contractFileName + Date.now() + ".txt";
+    var contractFile = __dirname + "/../build/" + contractFileName + "-deployed.txt";
+    var contractHistoryFile = __dirname + "/../build/history/" + contractFileName + Date.now() + "-deployed.txt";
 
     FS.writeFileSync( interfaceFile, contract.interface );
     FS.writeFileSync( interfaceHistoryFile, contract.interface );
@@ -81,9 +110,11 @@ function compile( contract, name ) {
 
     //Estimate Gas
 
-    var contractData = contractFactory.new.getData( { data: contractByteCode } );
+    var contractData = contractFactory.new.getData(
+        NetworkConfig.donatee,
+        { data: contractByteCode }
+    );
 
-    //console.log( contractData );
     var estimate = web.eth.estimateGas( { data: contractData } );
 
 	var data = {
@@ -98,13 +129,13 @@ function compile( contract, name ) {
 
 	// create contract
 
-	web.eth.contract( abi ).new( data, function (err, contract ) {
+	web.eth.contract( abi ).new( NetworkConfig.donatee, data, function (err, contract ) {
 
 		if( err ) {
 
 			console.error( err );
 
-		} else if(contract.address){
+		} else if( contract.address ) {
 
 			myContract = contract;
 

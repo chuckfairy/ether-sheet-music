@@ -279,6 +279,29 @@ Midi.NoteNumber = {
 
 
 /**
+ * Sequencer order === reverse
+ */
+
+Midi.SequenceOrder = (function() {
+
+    var output = [];
+
+    for( var noteId in Midi.NoteNumber ) {
+
+        var note = Midi.NoteNumber[ noteId ];
+        output.push({
+            id: noteId,
+            midi: note.midi
+        });
+
+    }
+
+    return output.reverse();
+
+})();
+
+
+/**
  * Min/Max constants
  */
 

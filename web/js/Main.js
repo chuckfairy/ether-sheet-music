@@ -36,22 +36,38 @@ window.addEventListener( "load", function() {
 
     // Check if logged in
 
-    init();
-
-    web3 = new Web3( web3.currentProvider );
-
-    contract = web3.eth.contract( abi );
-    instance = contract.at( ADDRESS );
-
     web3.eth.getAccounts( function( err, accounts ) {
 
-        if( err || ! accounts || ! accounts.length ) {
+        NETWORK = web3.version.network;
 
-            return alert( "Please login to MetaMask and connect to ropsten test net" );
+        web3.eth.defaultAccount = accounts[ 0 ] || "Not logged in";
+
+        contract = web3.eth.contract( abi );
+
+        var adr = ADDRESSES[ NETWORK ];
+
+        if( ! adr ) {
+
+            alert( "Network not configured for ethermusic.io (" + NETWORK + ") the piece will be displayed, but not contributable" );
+            NETWORK = DEFAULT_NETWORK;
+            adr = ADDRESSES[ NETWORK ];
+            HAS_WEB3 = false;
 
         }
 
-        web3.eth.defaultAccount = web3.eth.accounts[ 0 ];
+        ADDRESS = adr;
+
+        NETWORK_NAME = Networks[ NETWORK ] || "Unknown";
+
+        instance = contract.at( ADDRESS );
+
+        init();
+
+        if( err || ! accounts || ! accounts.length ) {
+
+            return alert( "Please login to MetaMask and connect to mainnet or ropsten" );
+
+        }
 
         web3.eth.getGasPrice( function( err, price ) {
 
@@ -60,5 +76,10 @@ window.addEventListener( "load", function() {
         });
 
     });
+
+
+    //Bootstrap popovers
+
+    $('[data-toggle="tooltip"]').tooltip();
 
 });

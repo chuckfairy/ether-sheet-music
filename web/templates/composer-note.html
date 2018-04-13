@@ -6,7 +6,7 @@
 
         <p style="font-size: 12px"><b>{{ composer.maker }}</b></p>
 
-        <p>Note #(<b>{{ composer.id }}</b>)</p>
+        <p>Beat #(<b>{{ composer.id }}</b>)</p>
 
         <p>Donation <b>{{ composer.donation }} Ether</b></p>
 
@@ -15,7 +15,7 @@
     </div>
 
     <div class="col-md-2">
-        <p>{{ composer.midiData.midi }} #({{ composer.midi }})</p>
+        <p class="composer-midi-data">{{ "#(" + composer.midi + ")" if composer.midi.length else "Rest" }}</p>
     </div>
 
     <div class="col-md-2">

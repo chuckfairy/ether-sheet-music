@@ -5,8 +5,9 @@
 
 var FS = require( "fs" );
 
-var config = FS.readFileSync( __dirname + "/../config/config.json" );
-config = JSON.parse( config );
+const configData = FS.readFileSync( __dirname + "/../config/config.json" );
+
+const config = JSON.parse( configData );
 
 const Config = {
 
@@ -25,9 +26,33 @@ const Config = {
      * Get eth server
      */
 
-    getEthLocation: function() {
+    getEthLocation: function( network ) {
 
-        return config.server + ":" + config.port;
+        var netConfig = config.networks[ network ];
+
+        if( ! netConfig ) {
+
+            throw new Error( "No network configured for " + network );
+
+        }
+
+        return netConfig.server + (
+            ( netConfig.port )
+                ? ":" + netConfig.port
+                : ""
+        );
+
+    },
+
+    getNetworkConfig: function( network ) {
+
+        return config.networks[ network ];
+
+    },
+
+    getDefaultLocation: function() {
+
+        return Config.getEthLocation( config.default_network );
 
     }
 

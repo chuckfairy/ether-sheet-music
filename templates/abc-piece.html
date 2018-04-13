@@ -1,7 +1,7 @@
 X: 1
 T: Ether Music Project
 L: 1/32
+M: C
 K: C
-Q: {{ tempo }}
 V: 1 clef=treble{% for noteBatch in notes | batch( 16 ) %}
 {% for note in noteBatch %}{{ note.abc.note | safe }}{% endfor %}{% endfor %}
