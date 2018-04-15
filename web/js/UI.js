@@ -366,7 +366,7 @@ EM.UI.prototype = {
 
         var scope = this;
 
-        scope.setMessage( "A new note as been created #" + id + "!" );
+        scope.setMessage( "A new beat as been created #" + id + "!" );
 
         if( ! scope.newNoteCreated ) {
 
@@ -421,7 +421,7 @@ EM.UI.prototype = {
         var donation = document.getElementById( "donation" );
         donation.value = "";
 
-        scope.setMessage( "You created a note!" );
+        scope.setMessage( "You created a beat!" );
 
         var url = scope.Music.getTransactionUrl( txHash );
         var urlLink = "<a href='" + url + "' target='_blank'>" + url + "</a>";

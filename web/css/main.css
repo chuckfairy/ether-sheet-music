@@ -123,6 +123,7 @@ i, button {
 
 .tab-content {
     padding-top: 10px;
+    overflow-x: hidden;
 }
 
 .rainbow-gradient {
@@ -265,10 +266,29 @@ i, button {
 
 
 /**
+ * Stats
+ */
+
+#global-stats {
+    overflow-x: auto;
+}
+
+
+/**
+ * About tab
+ */
+
+#dev-coin-list {
+    overflow-x: auto;
+}
+
+
+/**
  * Media queries
  */
 
 @media (max-width: 500px) {
+
     h1 {
         font-size: 1.5em;
     }
@@ -280,4 +300,13 @@ i, button {
     .nav-item::after {
         top: 1.4em;
     }
+
+}
+
+@media (max-width: 400px) {
+
+    .nav-item-end {
+        display: none;
+    }
+
 }
