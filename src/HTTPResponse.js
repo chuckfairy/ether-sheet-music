@@ -83,6 +83,8 @@ HTTPResponse.prototype = {
 
             if( request.url === "/" || request.url === "/index.html" ) {
 
+                response.setHeader("content-type", "text/html; charset=UTF-8");
+
                 response.write( scope.indexContent );
                 response.end();
 
