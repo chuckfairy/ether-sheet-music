@@ -4,6 +4,8 @@
  */
 "use strict";
 
+var web3 = web3 || undefined;
+
 //init
 
 EM.App = {
@@ -20,25 +22,23 @@ function init() {
 }
 
 
-// Window load
+// Check if logged in
 
-window.addEventListener( "load", function() {
-
-    //Check if even installed
-
-    if( typeof( Web3 ) === "undefined" && typeof( web3 ) === "undefined" ) {
-
-        alert( "MetaMask or Web3 enabled browser not installed, please install at http://metamask.io" );
-
-        return init();
-
-    }
-
-    // Check if logged in
+function logIn() {
 
     web3.eth.getAccounts( function( err, accounts ) {
 
-        NETWORK = web3.version.network;
+        console.log( err, accounts );
+
+        if( web3.currentProvider.isPortis ) {
+
+            NETWORK = DEFAULT_NETWORK;
+
+        } else {
+
+            NETWORK = web3.version.network;
+
+        }
 
         web3.eth.defaultAccount = accounts[ 0 ] || "Not logged in";
 
@@ -69,13 +69,37 @@ window.addEventListener( "load", function() {
 
         }
 
-        web3.eth.getGasPrice( function( err, price ) {
-
-            GAS_PRICE = price;
-
-        });
-
     });
+
+}
+
+
+// Window load
+
+window.addEventListener( "load", function() {
+
+    //Check if even installed
+
+    if( typeof( Web3 ) === "undefined" && typeof( web3 ) === "undefined" ) {
+
+        alert( "MetaMask or Web3 enabled browser not installed, please install at http://metamask.io" );
+
+        return init();
+
+    }
+
+    if( typeof( web3 ) === "undefined" ) {
+
+        web3 = new Web3(new exports.Provider({
+            network: "ropsten",
+            appName: "EtherMusic"
+        }));
+
+        HAS_WEB3 = true;
+
+    }
+
+    logIn();
 
 
     //Bootstrap popovers
